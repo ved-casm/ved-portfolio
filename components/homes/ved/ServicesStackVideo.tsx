@@ -3,6 +3,7 @@
 import AutoplayLoopVideo from "@/components/media/AutoplayLoopVideo";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Fragment, useLayoutEffect, useRef } from "react";
 import TextScramble from "@/components/animations/TextScramble";
 import {
@@ -24,6 +25,8 @@ type VideoSources = { type: string; src: string }[];
 type WebStudioServiceCard =
   | {
     key: string;
+    /** project page: /works/<slug> */
+    slug: string;
     leftTags: string[];
     rightTags: string[];
     titleLines: string[];
@@ -34,6 +37,8 @@ type WebStudioServiceCard =
   }
   | {
     key: string;
+    /** project page: /works/<slug> */
+    slug: string;
     leftTags: string[];
     rightTags: string[];
     titleLines: string[];
@@ -47,6 +52,7 @@ type WebStudioServiceCard =
 const WEB_STUDIO_SERVICE_CARDS: WebStudioServiceCard[] = [
   {
     key: "athlnk",
+    slug: "athlnk",
     leftTags: ["UI/UX", "Next.js", "TypeScript", "Tailwind"],
     rightTags: ["Aceternity UI", "Logo design", "Motion", "Hero UI"],
     titleLines: ["AthLnk", "Platform"],
@@ -56,6 +62,7 @@ const WEB_STUDIO_SERVICE_CARDS: WebStudioServiceCard[] = [
   },
   {
     key: "foreward",
+    slug: "foreward-golf",
     leftTags: ["React.js", "Bootstrap", "Inline CSS", "Dynamic CSS"],
     rightTags: ["Graphic Design", "Content Writing", "Logo Design", "Parallax UI"],
     titleLines: ["Foreward", "Golf"],
@@ -66,6 +73,7 @@ const WEB_STUDIO_SERVICE_CARDS: WebStudioServiceCard[] = [
   },
   {
     key: "cocogirl",
+    slug: "cocogirl-ai",
     leftTags: ["Next.js", "TypeScript", "Motion", "Tailwind"],
     rightTags: ["Aceternity", "Logo Design", "Shadcn UI", "Messaging Design"],
     titleLines: ["Cocogirl", "AI"],
@@ -76,6 +84,7 @@ const WEB_STUDIO_SERVICE_CARDS: WebStudioServiceCard[] = [
   },
   {
     key: "clearplace",
+    slug: "clear-place",
     leftTags: ["React.js", "Bootstrap", "Inline CSS", "Dynamic CSS"],
     rightTags: ["CRM Dashboard", "Logo Design", "Payment Portal", "Kanban Boards"],
     titleLines: ["Clear", "Place"],
@@ -87,6 +96,7 @@ const WEB_STUDIO_SERVICE_CARDS: WebStudioServiceCard[] = [
   },
   {
     key: "ascension",
+    slug: "ascension-healthcare",
     leftTags: ["React.js", "Terra UI", "Tailwind CSS", "Dashboard"],
     rightTags: ["Patient Report", "Report Summary", "API Integration", "Web Sockets"],
     titleLines: ["Ascension", "Healthcare"],
@@ -98,6 +108,7 @@ const WEB_STUDIO_SERVICE_CARDS: WebStudioServiceCard[] = [
   },
   {
     key: "greenfrog",
+    slug: "greenfrog-cleaning",
     leftTags: ["React.js", "Bootstrap", "Inline CSS", "Dynamic CSS"],
     rightTags: ["CRM Dashboard", "Logo Design", "Payment Portal", "Booking Portal"],
     titleLines: ["GreenFrog", "Cleaning"],
@@ -110,6 +121,7 @@ const WEB_STUDIO_SERVICE_CARDS: WebStudioServiceCard[] = [
 ];
 
 export default function ServicesStackVideo() {
+  const router = useRouter();
   const topRefs = useRef<HTMLDivElement[]>([]);
   const bottomRefs = useRef<HTMLDivElement[]>([]);
   const cardRefs = useRef<HTMLDivElement[]>([]);
@@ -240,7 +252,14 @@ export default function ServicesStackVideo() {
                   ) : null}
 
                   <div
-                    className="card__wrapper"
+                    className="card__wrapper active-cursor-permanent"
+                    data-cursor-text="View Project"
+                    style={{ cursor: "pointer" }}
+                    onClick={(e) => {
+                      // the title is a real link; anywhere else on the card opens the project too
+                      if ((e.target as HTMLElement).closest("a")) return;
+                      router.push(`/works/${card.slug}`);
+                    }}
                     ref={(el) => {
                       if (!el) return;
                       cardWrapperRefs.current[index] = el;
@@ -277,8 +296,8 @@ export default function ServicesStackVideo() {
                       </div>
                       <Link
                         className="card__title active-cursor-permanent"
-                        data-cursor-text="Know More"
-                        href="/services"
+                        data-cursor-text="View Project"
+                        href={`/works/${card.slug}`}
                       >
                         <p
                           className="permanent"
