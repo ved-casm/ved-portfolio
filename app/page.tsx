@@ -1,12 +1,7 @@
 import OrbFooterReveal from "@/components/footers/OrbFooterReveal";
 import { Metadata } from "next";
-import Hero from "@/components/homes/ved/Hero";
-import AboutMission from "@/components/homes/ved/AboutMission";
-import SelectedWork from "@/components/homes/ved/SelectedWork";
 import ServicesStackVideo from "@/components/homes/ved/ServicesStackVideo";
 import ContourTimeline from "@/components/homes/ved/ContourTimeline/ContourTimeline";
-import DividerCursor from "@/components/homes/ved/DividerCursor";
-import ParallaxDividerImage from "@/components/homes/ved/ParallaxDividerImage";
 import RevealHero from "@/components/homes/ved/newhero/RevealHero";
 import MarqueeDivider from "@/components/homes/ved/MarqueeDivider";
 import NewSection from "@/components/homes/ved/NewSection";
