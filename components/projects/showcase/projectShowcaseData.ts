@@ -35,30 +35,33 @@ export type ShowcaseNext = {
 };
 
 // ---------------------------------------------------------------------------
-// Placeholder media: each project only has one image in /public so far, so
-// galleries borrow the others. Replace per project as real assets arrive.
+// Media: cinematic device shots of each live site in /public/img/projects/<slug>.
+// 01 is the wide hero shot, 02 and 03 are portrait (they fill the two intro
+// halves), the rest are wide.
 // ---------------------------------------------------------------------------
-const IMG = {
-  athlnk: { type: "video", src: "/showcase.mp4" } as ShowcaseMedia,
-  athlnkAlt: { type: "video", src: "/showcase1.mp4" } as ShowcaseMedia,
-  foreward: { type: "image", src: "/Foreward.png", alt: "Foreward Golf" } as ShowcaseMedia,
-  cocogirl: { type: "image", src: "/Cocogirl.png", alt: "Cocogirl AI" } as ShowcaseMedia,
-  clear: { type: "image", src: "/Clear.png", alt: "Clear Place" } as ShowcaseMedia,
-  ascension: { type: "image", src: "/Ascension.png", alt: "Ascension Healthcare" } as ShowcaseMedia,
-  greenfrog: { type: "image", src: "/GreenFrog.png", alt: "GreenFrog Cleaning" } as ShowcaseMedia,
+const shots = (slug: string, name: string, count: number): ShowcaseMedia[] =>
+  Array.from({ length: count }, (_, i) => ({
+    type: "image" as const,
+    src: `/img/projects/${slug}/${String(i + 1).padStart(2, "0")}.avif`,
+    alt: `${name} shown on a device`,
+  }));
+const media = (slug: string, name: string, count = 8) => {
+  const all = shots(slug, name, count);
+  return {
+    intro: { primary: all[1], secondary: all[2] },
+    ellipse: all[0],
+    // wide shots lead the gallery; the portraits come after
+    gallery: [all[0], ...all.slice(3), all[1], all[2]],
+  };
 };
-const ALL: ShowcaseMedia[] = [
-  IMG.foreward,
-  IMG.cocogirl,
-  IMG.athlnk,
-  IMG.clear,
-  IMG.ascension,
-  IMG.greenfrog,
-  IMG.athlnkAlt,
-];
-/** own media first, then the rest, 8 in total */
-const galleryFor = (...own: ShowcaseMedia[]) =>
-  [...own, ...ALL.filter((m) => !own.includes(m))].concat(ALL).slice(0, 8);
+const M = {
+  athlnk: media("athlnk", "AthLnk"),
+  foreward: media("foreward-golf", "Foreward Golf"),
+  cocogirl: media("cocogirl-ai", "Cocogirl AI", 7),
+  clear: media("clear-place", "Clear Place"),
+  ascension: media("ascension-healthcare", "Ascension Healthcare"),
+  greenfrog: media("greenfrog-cleaning", "GreenFrog Cleaning"),
+};
 const LOGO = { src: "/newmonogram-white.png", logo: true };
 const contactLinks = (label: string) => [
   { label, href: "/contact", variant: "experience" as const },
@@ -73,7 +76,7 @@ export const projects: ShowcaseProject[] = [
     slug: "athlnk",
     seoTitle: "AthLnk Platform | Works | Vedank Gaur",
     seoDescription: "AthLnk: product design and Next.js frontend for a platform connecting athletes, coaches and scouts.",
-    intro: { primary: IMG.athlnkAlt, secondary: IMG.athlnk, titleLines: ["AthLnk", "Platform"] },
+    intro: { ...M.athlnk.intro, titleLines: ["AthLnk", "Platform"] },
     context: {
       categories: ["UI/UX Design", "Next.js", "Logo Design"],
       paragraphs: [
@@ -82,14 +85,14 @@ export const projects: ShowcaseProject[] = [
       ],
       links: contactLinks("Discuss this project"),
     },
-    ellipse: IMG.athlnkAlt,
-    gallery: galleryFor(IMG.athlnk, IMG.athlnkAlt),
+    ellipse: M.athlnk.ellipse,
+    gallery: M.athlnk.gallery,
   },
   {
     slug: "foreward-golf",
     seoTitle: "Foreward Golf | Works | Vedank Gaur",
     seoDescription: "Foreward Golf: brand website, graphic design and parallax UI in React.",
-    intro: { primary: IMG.foreward, secondary: IMG.athlnkAlt, titleLines: ["Foreward", "Golf"] },
+    intro: { ...M.foreward.intro, titleLines: ["Foreward", "Golf"] },
     context: {
       categories: ["React.js", "Parallax UI", "Graphic Design"],
       paragraphs: [
@@ -98,14 +101,14 @@ export const projects: ShowcaseProject[] = [
       ],
       links: contactLinks("Discuss this project"),
     },
-    ellipse: IMG.foreward,
-    gallery: galleryFor(IMG.foreward),
+    ellipse: M.foreward.ellipse,
+    gallery: M.foreward.gallery,
   },
   {
     slug: "cocogirl-ai",
     seoTitle: "Cocogirl AI | Works | Vedank Gaur",
     seoDescription: "Cocogirl AI: messaging UI and Next.js frontend for an AI character chat app.",
-    intro: { primary: IMG.cocogirl, secondary: IMG.athlnk, titleLines: ["Cocogirl", "AI"] },
+    intro: { ...M.cocogirl.intro, titleLines: ["Cocogirl", "AI"] },
     context: {
       categories: ["Next.js", "Messaging Design", "Shadcn UI"],
       paragraphs: [
@@ -114,14 +117,14 @@ export const projects: ShowcaseProject[] = [
       ],
       links: contactLinks("Discuss this project"),
     },
-    ellipse: IMG.cocogirl,
-    gallery: galleryFor(IMG.cocogirl),
+    ellipse: M.cocogirl.ellipse,
+    gallery: M.cocogirl.gallery,
   },
   {
     slug: "clear-place",
     seoTitle: "Clear Place | Works | Vedank Gaur",
     seoDescription: "Clear Place: CRM dashboard, payments and kanban boards in one brand platform.",
-    intro: { primary: IMG.clear, secondary: IMG.athlnkAlt, titleLines: ["Clear", "Place"] },
+    intro: { ...M.clear.intro, titleLines: ["Clear", "Place"] },
     context: {
       categories: ["CRM Dashboard", "React.js", "Payment Portal"],
       paragraphs: [
@@ -130,14 +133,14 @@ export const projects: ShowcaseProject[] = [
       ],
       links: contactLinks("Discuss this project"),
     },
-    ellipse: IMG.clear,
-    gallery: galleryFor(IMG.clear),
+    ellipse: M.clear.ellipse,
+    gallery: M.clear.gallery,
   },
   {
     slug: "ascension-healthcare",
     seoTitle: "Ascension Healthcare | Works | Vedank Gaur",
     seoDescription: "Ascension Healthcare: patient report dashboard with live data in React.",
-    intro: { primary: IMG.ascension, secondary: IMG.athlnk, titleLines: ["Ascension", "Healthcare"] },
+    intro: { ...M.ascension.intro, titleLines: ["Ascension", "Healthcare"] },
     context: {
       categories: ["Dashboard", "React.js", "Web Sockets"],
       paragraphs: [
@@ -146,14 +149,14 @@ export const projects: ShowcaseProject[] = [
       ],
       links: contactLinks("Discuss this project"),
     },
-    ellipse: IMG.ascension,
-    gallery: galleryFor(IMG.ascension),
+    ellipse: M.ascension.ellipse,
+    gallery: M.ascension.gallery,
   },
   {
     slug: "greenfrog-cleaning",
     seoTitle: "GreenFrog Cleaning | Works | Vedank Gaur",
     seoDescription: "GreenFrog Cleaning: booking portal, CRM and payments for a cleaning company.",
-    intro: { primary: IMG.greenfrog, secondary: IMG.athlnkAlt, titleLines: ["GreenFrog", "Cleaning"] },
+    intro: { ...M.greenfrog.intro, titleLines: ["GreenFrog", "Cleaning"] },
     context: {
       categories: ["Booking Portal", "CRM Dashboard", "React.js"],
       paragraphs: [
@@ -162,8 +165,8 @@ export const projects: ShowcaseProject[] = [
       ],
       links: contactLinks("Discuss this project"),
     },
-    ellipse: IMG.greenfrog,
-    gallery: galleryFor(IMG.greenfrog),
+    ellipse: M.greenfrog.ellipse,
+    gallery: M.greenfrog.gallery,
   },
 ];
 
