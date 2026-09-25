@@ -1,0 +1,24 @@
+.scrollRevealText {
+  position: relative;
+  color: var(--reveal-dim, #4f4f4f);
+  --clip-value: 100%;
+  white-space: pre-line;
+}
+
+.scrollRevealText::before {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  color: var(--reveal-bright, #ffffff);
+  clip-path: inset(0 0 var(--clip-value) 0);
+  pointer-events: none;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  font-style: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+  text-transform: inherit;
+  text-align: inherit;
+  white-space: inherit;
+}

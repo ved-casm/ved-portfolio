@@ -1,0 +1,8 @@
+/* Compact variant: the template keeps a full viewport of caption-only scroll
+   before the first video (the 100vh sticky block) and after the last one
+   (padding-bottom: 100vh). Pull the videos up under the caption and shorten
+   the tail. */
+.mxd-dv-sticky-cap--compact .mxd-dv-sticky-cap__scroll {
+    margin-top: -45vh;
+    padding-bottom: 35vh;
+}
