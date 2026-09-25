@@ -1,0 +1,887 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,400;0,500;1,400;1,500&display=swap");
+
+/* /contact — scene + brief form. Root font-size is 10px, so 1rem = 10px. */
+.ct {
+  --ct-bg: #0f0f0f;
+  --ct-fg: #f2f2f2;
+  --ct-muted: rgba(255, 255, 255, 0.52);
+  --ct-line: rgba(255, 255, 255, 0.14);
+  --ct-serif: "Cormorant", serif;
+  --ct-mono: var(--_font-accent), monospace;
+  position: relative;
+  background: var(--ct-bg);
+  color: var(--ct-fg);
+}
+
+html.ct-locked,
+html.ct-locked body {
+  overflow: hidden;
+}
+
+/* ---- scene ---------------------------------------------------------------- */
+.ct-stage {
+  position: sticky;
+  top: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100vh;
+  margin-bottom: -100vh;
+  overflow: hidden;
+  touch-action: pan-y;
+}
+
+.ct-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* sun / moon switch */
+.ct-daynight {
+  position: absolute;
+  left: 3rem;
+  bottom: 3rem;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.7rem 1.6rem 0.7rem 0.7rem;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 99px;
+  background: rgba(15, 15, 15, 0.35);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #fff;
+  font: 500 1.2rem/1 var(--ct-mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.ct-daynight:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.45);
+}
+
+.ct-daynight svg {
+  width: 3.4rem;
+  height: 3.4rem;
+  overflow: visible;
+}
+
+.ct-dn__core {
+  fill: #fff;
+  transition: r 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.ct-dn__bite {
+  transition: cx 0.6s cubic-bezier(0.65, 0, 0.35, 1), cy 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.ct-dn__rays {
+  stroke: #fff;
+  stroke-width: 2;
+  stroke-linecap: round;
+  transform-origin: 16px 16px;
+  transform: rotate(-60deg) scale(0.4);
+  opacity: 0;
+  transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1), opacity 0.4s ease;
+}
+
+.ct.is-day .ct-dn__core {
+  r: 6.5;
+}
+
+.ct.is-day .ct-dn__bite {
+  cx: 34;
+  cy: -2;
+}
+
+.ct.is-day .ct-dn__rays {
+  transform: none;
+  opacity: 1;
+}
+
+.ct.is-day .ct-daynight {
+  background: rgba(15, 15, 15, 0.55);
+}
+
+/* ---- panel ---------------------------------------------------------------- */
+.ct-panel {
+  position: relative;
+  z-index: 1;
+  width: 49.4%;
+  min-height: 100vh;
+  margin-left: 50.6%;
+  padding: 3rem 6rem 10rem 4.4rem;
+  background: var(--ct-bg);
+}
+
+.ct-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* the site hamburger sits at the far right */
+  padding-right: 11rem;
+  min-height: 3.6rem;
+}
+
+.ct-settings {
+  position: relative;
+}
+
+/* invisible bridge over the gap between the button and the menu */
+.ct-settings::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 26rem;
+  height: 1.4rem;
+}
+
+.ct-settings__btn,
+.ct-levels,
+.ct-link,
+.ct-copy {
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+
+.ct-settings__btn {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  font: 500 1.3rem/1 var(--ct-mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.ct-settings__btn svg {
+  width: 1.7rem;
+  height: 1.7rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.ct-settings__btn:hover svg,
+.ct-settings__btn[aria-expanded="true"] svg {
+  transform: rotate(90deg);
+}
+
+.ct-pop {
+  position: absolute;
+  top: calc(100% + 1.2rem);
+  left: -1.2rem;
+  z-index: 5;
+  width: 26rem;
+  padding: 1.4rem 1rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 1.8rem;
+  background: rgba(28, 28, 30, 0.82);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-0.8rem) scale(0.97);
+  transform-origin: top left;
+  transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.2), visibility 0.3s;
+}
+
+.ct-pop.is-open {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+}
+
+.ct-pop__title {
+  margin: 0 0 0.8rem 1rem;
+  font: 500 1.1rem/1 var(--ct-mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ct-muted);
+}
+
+.ct-pop__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 1.1rem 1rem;
+  border: 0;
+  border-radius: 1rem;
+  background: none;
+  color: #fff;
+  font: 500 1.5rem/1 var(--_font-default);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.ct-pop__row:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.ct-pop__row em {
+  font: 500 1.2rem/1 var(--ct-mono);
+  font-style: normal;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ct-muted);
+}
+
+.ct-switch {
+  position: relative;
+  width: 4rem;
+  height: 2.2rem;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.18);
+  transition: background-color 0.3s ease;
+}
+
+.ct-switch::after {
+  content: "";
+  position: absolute;
+  top: 0.3rem;
+  left: 0.3rem;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 0.35s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.ct-switch.is-on {
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.ct-switch.is-on::after {
+  transform: translateX(1.8rem);
+  background: #0f0f0f;
+}
+
+.ct-levels {
+  padding: 0.6rem;
+}
+
+.ct-levels > span {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.3rem;
+  height: 1.8rem;
+}
+
+.ct-levels i {
+  width: 0.3rem;
+  height: 100%;
+  background: currentColor;
+  transform-origin: bottom;
+  transform: scaleY(0.14);
+  transition: transform 0.08s linear;
+}
+
+.ct-levels:not(.is-on) {
+  opacity: 0.6;
+}
+
+/* heading */
+.ct-title {
+  margin: 12vh 0 0;
+  font: 800 clamp(4.4rem, 5vw, 9.6rem)/0.92 var(--_font-default);
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+  color: var(--ct-fg);
+}
+
+/* beat the template's `h1 span` colour */
+.ct-title .ct-title__line,
+.ct-title .ct-title__line > span {
+  color: inherit;
+}
+
+.ct-title__line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.04em;
+}
+
+.ct-title__line > span {
+  display: inline-block;
+  color: inherit;
+}
+
+.ct-title__line--in {
+  padding-left: 0.9em;
+  position: relative;
+}
+
+/* the arrow sits under "Let's", on the left edge */
+.ct-title__line--in i {
+  position: absolute;
+  left: 0.08em;
+  top: 0.32em;
+  font: 400 0.42em/1 var(--_font-default);
+  font-style: normal;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.ct-title em {
+  font-family: var(--ct-serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.12em;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.ct-lead {
+  margin: 4.4rem 0 0;
+  font: 500 1.4rem/1.45 var(--ct-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ct-muted);
+}
+
+/* form */
+.ct-form {
+  margin-top: 7rem;
+}
+
+.ct-group {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(16rem, 0.9fr) 1.3fr;
+  gap: 1.4rem 2rem;
+  margin: 0;
+  padding: 2.6rem 0 3rem;
+  border: 0;
+  border-top: 1px solid var(--ct-line);
+  align-items: start;
+}
+
+.ct-legend {
+  grid-column: 1;
+  margin: 0;
+  font: 600 2rem/1.2 var(--_font-default);
+  color: var(--ct-fg);
+}
+
+.ct-group.is-required .ct-legend::after {
+  content: "*";
+  margin-left: 0.2rem;
+  color: #ff5a4e;
+}
+
+.ct-group.has-error {
+  border-top-color: rgba(255, 90, 78, 0.8);
+}
+
+.ct-group.has-error .ct-legend {
+  color: #ff8a80;
+}
+
+.ct-options {
+  grid-column: 2;
+  display: flex;
+  flex-direction: column;
+}
+
+.ct-option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
+  padding: 1.1rem 0 1.3rem;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.78);
+  transition: color 0.3s ease;
+}
+
+/* line under each option, filled from the left on hover */
+.ct-option::before,
+.ct-option::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--ct-line);
+}
+
+.ct-option::after {
+  background: #fff;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.ct-option:hover,
+.ct-option:has(input:checked) {
+  color: #fff;
+}
+
+.ct-option:hover::after,
+.ct-option:has(input:checked)::after {
+  transform: scaleX(1);
+}
+
+.ct-option input,
+.ct-pill input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ct-pill {
+  position: relative;
+}
+
+.ct-option i {
+  position: relative;
+  flex: none;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+}
+
+.ct-option i::after {
+  content: "";
+  position: absolute;
+  inset: 0.4rem;
+  border-radius: 50%;
+  background: #fff;
+  transform: scale(0);
+  transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.3);
+}
+
+.ct-option input:checked + i::after {
+  transform: scale(1);
+}
+
+.ct-option input:focus-visible + i {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
+.ct-option span {
+  font: 400 2.6rem/1.1 var(--ct-serif);
+  letter-spacing: -0.005em;
+}
+
+.ct-field input,
+.ct-field textarea {
+  grid-column: 2;
+  width: 100%;
+  padding: 0.4rem 0 1rem;
+  border: 0;
+  border-bottom: 1px solid var(--ct-line);
+  border-radius: 0;
+  background: none;
+  color: #fff;
+  font: 400 2.6rem/1.2 var(--ct-serif);
+  outline: none;
+  resize: vertical;
+  transition: border-color 0.3s ease;
+}
+
+.ct-field input::placeholder,
+.ct-field textarea::placeholder {
+  color: rgba(255, 255, 255, 0.28);
+}
+
+.ct-field input:focus,
+.ct-field textarea:focus {
+  border-bottom-color: #fff;
+}
+
+.ct-pills {
+  grid-column: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.ct-pill span {
+  display: inline-block;
+  padding: 1rem 1.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 99px;
+  font: 500 1.5rem/1 var(--_font-default);
+  color: rgba(255, 255, 255, 0.78);
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.ct-pill:hover span {
+  border-color: #fff;
+  color: #fff;
+}
+
+.ct-pill input:checked + span {
+  background: #fff;
+  border-color: #fff;
+  color: #0f0f0f;
+}
+
+.ct-pill input:focus-visible + span {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
+.ct-submit {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding-top: 3rem;
+  border-top: 1px solid var(--ct-line);
+}
+
+.ct-note {
+  max-width: 28rem;
+  margin: 0;
+  font: 500 1.1rem/1.5 var(--ct-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ct-muted);
+}
+
+.ct-send {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.6rem;
+  padding: 1.8rem 2.2rem 1.8rem 3.4rem;
+  border: 0;
+  border-radius: 99px;
+  background: #fff;
+  color: #0f0f0f;
+  font: 700 1.6rem/1 var(--_font-default);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+}
+
+.ct-send:hover {
+  transform: scale(1.03);
+}
+
+.ct-send.is-sending {
+  cursor: progress;
+  opacity: 0.75;
+}
+
+.ct-send.is-sending .ct-send__arrow {
+  animation: ctSpin 1s linear infinite;
+}
+
+@keyframes ctSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.ct-note__error {
+  color: #ff8a80;
+}
+
+.ct-note__error a {
+  color: #fff;
+}
+
+.ct-hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.ct-send__roll {
+  display: grid;
+  overflow: hidden;
+  height: 1em;
+}
+
+.ct-send__roll span {
+  grid-area: 1 / 1;
+  transition: transform 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.ct-send__roll span + span {
+  transform: translateY(110%);
+}
+
+.ct-send:hover .ct-send__roll span:first-child {
+  transform: translateY(-110%);
+}
+
+.ct-send:hover .ct-send__roll span + span {
+  transform: none;
+}
+
+.ct-send__arrow {
+  display: grid;
+  place-items: center;
+  width: 3.6rem;
+  height: 3.6rem;
+  border-radius: 50%;
+  background: #0f0f0f;
+  color: #fff;
+  transition: transform 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.ct-send:hover .ct-send__arrow {
+  transform: rotate(-45deg);
+}
+
+.ct-sent {
+  margin-top: 7rem;
+  padding: 3rem 0;
+  border-top: 1px solid var(--ct-line);
+  font: 400 1.7rem/1.5 var(--_font-default);
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.ct-sent__title {
+  margin: 0 0 1rem;
+  font: italic 500 5rem/1 var(--ct-serif);
+  color: #fff;
+}
+
+.ct-link {
+  margin-top: 1.6rem;
+  font: 600 1.4rem/1 var(--_font-default);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 0.4rem;
+}
+
+/* ---- gate ----------------------------------------------------------------- */
+.ct-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--ct-bg);
+  color: #fff;
+}
+
+.ct.is-done .ct-gate {
+  display: none;
+}
+
+.ct-gate__smoke {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.ct-gate__brand {
+  position: relative;
+  text-align: center;
+}
+
+.ct-gate__brand img {
+  width: 6rem;
+  height: auto;
+}
+
+.ct-gate__brand p {
+  margin: 1.4rem 0 1.8rem;
+  font: italic 500 3.4rem/1 var(--ct-serif);
+}
+
+.ct-gate__brand span {
+  display: block;
+  font: 500 1.3rem/1.5 var(--ct-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ct-muted);
+}
+
+.ct-gate__actions {
+  position: absolute;
+  bottom: 8vh;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  transform: translateX(-50%);
+}
+
+.ct-gate__load {
+  margin: 0;
+  font: 500 1.3rem/1.5 var(--ct-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--ct-muted);
+}
+
+.ct-gate__load b {
+  color: #fff;
+  font-weight: 500;
+}
+
+.ct-enter,
+.ct-enter-quiet {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.2rem;
+  border: 0;
+  background: none;
+  color: #fff;
+  cursor: pointer;
+  font: 500 1.7rem/1 var(--_font-default);
+  white-space: nowrap;
+  animation: ctRise 0.8s cubic-bezier(0.2, 0.9, 0.3, 1) both;
+}
+
+.ct-enter {
+  position: relative;
+  overflow: hidden;
+  padding: 1.8rem 4rem;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.06);
+  isolation: isolate;
+}
+
+/* a soft light drifting inside the glass pill */
+.ct-enter__glow {
+  position: absolute;
+  z-index: -1;
+  top: -60%;
+  left: -20%;
+  width: 60%;
+  height: 220%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(255, 255, 255, 0.35), transparent);
+  filter: blur(6px);
+  animation: ctGlow 3.6s ease-in-out infinite alternate;
+}
+
+.ct-enter:hover {
+  border-color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.ct-enter-quiet {
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+  font-size: 1.5rem;
+  color: rgba(255, 255, 255, 0.78);
+  animation-delay: 0.12s;
+}
+
+.ct-enter-quiet:hover {
+  color: #fff;
+  border-bottom-color: #fff;
+}
+
+.ct-enter svg,
+.ct-enter-quiet svg {
+  width: 2rem;
+  height: 2rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@keyframes ctRise {
+  from {
+    opacity: 0;
+    transform: translateY(1.6rem);
+  }
+}
+
+@keyframes ctGlow {
+  to {
+    transform: translateX(170%);
+  }
+}
+
+/* ---- smaller screens: scene on top, form below ----------------------------- */
+@media (max-width: 1024px) {
+  .ct-stage {
+    position: relative;
+    height: 72svh;
+    margin-bottom: 0;
+  }
+
+  .ct-daynight {
+    left: 2rem;
+    bottom: 2rem;
+  }
+
+  .ct-panel {
+    width: 100%;
+    min-height: 0;
+    margin-left: 0;
+    padding: 3rem 2.4rem 8rem;
+  }
+
+  .ct-bar {
+    padding-right: 0;
+  }
+
+  .ct-title {
+    margin-top: 6rem;
+    font-size: clamp(4.4rem, 11vw, 9rem);
+  }
+}
+
+@media (max-width: 640px) {
+  .ct-group {
+    grid-template-columns: 1fr;
+  }
+
+  .ct-options,
+  .ct-field input,
+  .ct-field textarea,
+  .ct-pills {
+    grid-column: 1;
+  }
+
+  .ct-option span,
+  .ct-field input,
+  .ct-field textarea {
+    font-size: 2.3rem;
+  }
+
+  .ct-send {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ct-enter__glow {
+    animation: none;
+  }
+}

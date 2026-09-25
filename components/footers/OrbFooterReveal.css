@@ -1,0 +1,152 @@
+/* Footer1 is styled only through the theme tokens from main.css, so pinning
+   them to their dark values here renders the footer in the dark theme,
+   whatever theme the rest of the site is in. */
+.orb-reveal {
+    color-scheme: dark;
+    --base: var(--base--dark);
+    --base-rgb: var(--base-rgb--dark);
+    --base-tint: var(--base-tint--dark);
+    --base-tint-rgb: var(--base-tint-rgb--dark);
+    --base-bright: var(--base-bright--dark);
+    --base-bright-rgb: var(--base-bright-rgb--dark);
+    --accent: var(--accent--dark);
+    --highlight: var(--highlight--dark);
+    --base-opp: var(--base-opp--dark);
+    --base-opp-rgb: var(--base-opp-rgb--dark);
+    --t-bright: var(--t-bright--dark);
+    --t-medium: var(--t-medium--dark);
+    --t-muted: var(--t-muted--dark);
+    --t-muted-extra: var(--t-muted-extra--dark);
+    --t-opp-bright: var(--t-opp-bright--dark);
+    --t-opp-medium: var(--t-opp-medium--dark);
+    --t-opp-muted: var(--t-opp-muted--dark);
+    --t-opp-muted-extra: var(--t-opp-muted-extra--dark);
+    --st-muted: var(--st-muted--dark);
+    --st-medium: var(--st-medium--dark);
+    --st-bright: var(--st-bright--dark);
+
+    position: relative;
+    width: 100%;
+    background-color: #0b0d10;
+    color: var(--t-bright);
+    overflow: hidden;
+}
+
+/* footer sits at the bottom of at least one viewport, so the reveal circle
+   (centred on the viewport) always has footer behind it */
+.orb-reveal__clip {
+    position: relative;
+    z-index: 2;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    background-color: var(--base);
+    clip-path: circle(0px at 50% 50vh);
+}
+
+/* ---- CTA: giant "CONTACT ME." that slides horizontally ---- */
+.orb-reveal__cta {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.orb-reveal__track {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    white-space: nowrap;
+    font-size: min(60vh, 40vw);
+    font-weight: 800;
+    line-height: 0.8;
+    letter-spacing: -0.04em;
+    text-transform: uppercase;
+    color: #f2f2f2;
+    text-decoration: none;
+    will-change: transform;
+}
+
+.orb-reveal__track:hover,
+.orb-reveal__track:focus-visible {
+    color: #ffffff;
+}
+
+/* video capsule before the "C": cap-height pill sitting on the baseline
+   (the video is out of flow, so the box's baseline is its bottom edge) */
+.orb-reveal__capsule {
+    position: relative;
+    display: inline-block;
+    width: 1.3em;
+    height: 0.72em;
+    margin-right: 0.12em;
+    border-radius: 999px;
+    overflow: hidden;
+    background-color: #1a1a1a;
+    isolation: isolate;
+}
+
+.orb-reveal__capsule video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* empty boxes that reserve room for the planets; baseline-aligned */
+.orb-reveal__ph {
+    display: inline-block;
+}
+
+.orb-reveal__ph--o {
+    width: 0.74em;
+    height: 0.74em;
+    margin: 0 0.02em;
+}
+
+.orb-reveal__ph--dot {
+    width: 0.17em;
+    height: 0.17em;
+    margin-left: 0.05em;
+}
+
+/* ---- planets (positioned from JS) ---- */
+.orb-reveal__layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 3;
+    width: 100%;
+    height: 100vh;
+    pointer-events: none;
+}
+
+.orb-reveal__planet {
+    position: absolute;
+    top: 0;
+    left: 0;
+    will-change: transform;
+}
+
+.orb-reveal__planet img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.orb-reveal__p1 {
+    width: 400px;
+    height: 400px;
+}
+
+.orb-reveal__p2 {
+    width: 250px;
+    height: 250px;
+}

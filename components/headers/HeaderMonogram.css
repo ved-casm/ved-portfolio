@@ -1,0 +1,34 @@
+/* header monogram: sits level with the fixed hamburger (top 3rem, 3.6rem tall) */
+.mxd-header {
+  z-index: 10;
+  pointer-events: none;
+}
+
+.ved-header-mono {
+  pointer-events: auto;
+  display: block;
+  /* centre on the hamburger's centre line (3rem + 1.8rem) */
+  margin-top: calc(1.8rem - 2.1rem);
+  mix-blend-mode: difference;
+}
+
+.ved-header-mono img {
+  display: block;
+  width: auto;
+  height: 4.2rem;
+  transition: opacity 0.3s ease;
+}
+
+.ved-header-mono:hover img {
+  opacity: 0.7;
+}
+
+@media (min-width: 768px) {
+  .ved-header-mono {
+    margin-top: calc(1.8rem - 2.4rem);
+  }
+
+  .ved-header-mono img {
+    height: 4.8rem;
+  }
+}
