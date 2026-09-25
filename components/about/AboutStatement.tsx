@@ -30,9 +30,9 @@ const LINES = [
 const MEDIA: { src: string; video?: boolean }[] = [
   { src: "/showcase.mp4", video: true },
   { src: "/img/about/vedank-portrait.webp" },
-  { src: "/Cocogirl.png" },
+  { src: "/img/projects/clear-place/05.avif" },
   { src: "/showcase1.mp4", video: true },
-  { src: "/Foreward.png" },
+  { src: "/img/projects/foreward-golf/08.avif" },
 ];
 // parallax travel per image (yPercent start -> end)
 const DRIFT = [
