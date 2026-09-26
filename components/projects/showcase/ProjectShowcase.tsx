@@ -220,11 +220,13 @@ export default function ProjectShowcase({
         return { leftDistance, rightDistance, mediaStartX: midX - box.left, mediaStartY: midY - box.top };
       };
       let m = measure();
-      const startYPct = -150;
+      // five previews now (no logo): keep the pile compact and centred on the gap
+      const startYPct = -135;
+      const endYPct = 35;
       const count = medias.length;
       const rnd = medias.map(() => ({
         startRotate: (Math.random() - 0.5) * 10,
-        startXPercent: -50 + (Math.random() - 0.5) * 120,
+        startXPercent: -50 + (Math.random() - 0.5) * 70,
         endScale: Math.random() / 5 + 1,
         endRotate: (Math.random() - 0.5) * 10,
       }));
@@ -240,7 +242,7 @@ export default function ProjectShowcase({
           x: () => m.mediaStartX,
           y: () => m.mediaStartY,
           xPercent: (i) => rnd[i].startXPercent,
-          yPercent: (i) => startYPct + (i / Math.max(1, count - 1)) * (50 - startYPct),
+          yPercent: (i) => startYPct + (i / Math.max(1, count - 1)) * (endYPct - startYPct),
         },
         {
           display: "block",
