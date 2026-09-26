@@ -350,7 +350,7 @@
   z-index: 1;
   border-radius: clamp(12px, 1.2vw, 22px);
   width: auto;
-  height: 15vw;
+  height: 12.5vw;
   aspect-ratio: 1;
   object-fit: cover;
   display: block;
