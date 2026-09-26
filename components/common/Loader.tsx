@@ -18,7 +18,16 @@ const LOADER_IMAGES = [
   "/img/loa_07.avif",
 ];
 
+// the loader belongs to a full page load only; client-side navigation must not replay it
+let loaderDone = false;
+
 export default function Loader({ onComplete }: LoaderProps) {
+  // latest callback without re-running the effect (the parent passes a new
+  // function on every render, which used to restart the loader on navigation)
+  const onCompleteRef = useRef(onComplete);
+  useEffect(() => {
+    onCompleteRef.current = onComplete;
+  }, [onComplete]);
   const loaderRef = useRef<HTMLDivElement>(null);
   const topRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -33,8 +42,10 @@ export default function Loader({ onComplete }: LoaderProps) {
     const imagesContainer = imagesContainerRef.current;
     const countText = countTextRef.current;
 
+    if (loaderDone) return;
     if (!loader || !top || !bottom || !imagesContainer || !countText) {
-      onComplete?.();
+      loaderDone = true;
+      onCompleteRef.current?.();
       return;
     }
 
@@ -92,7 +103,8 @@ export default function Loader({ onComplete }: LoaderProps) {
     const tl = gsap.timeline({
       onComplete: () => {
         gsap.set(loader, { display: "none" });
-        onComplete?.();
+        loaderDone = true;
+        onCompleteRef.current?.();
       },
     });
 
@@ -141,7 +153,7 @@ export default function Loader({ onComplete }: LoaderProps) {
     return () => {
       tl.kill();
     };
-  }, [onComplete]);
+  }, []);
 
   return (
     <div

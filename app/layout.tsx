@@ -4,6 +4,8 @@ import Header1 from "@/components/headers/Header1";
 import TemplateRuntimeProvider from "@/components/common/TemplateRuntimeProvider";
 import MenuRuntimeShell from "@/components/headers/MenuRuntimeShell";
 import { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -60,6 +62,9 @@ export default async function RootLayout({
           <MenuRuntimeShell />
           {children}
         </TemplateRuntimeProvider>
+        {/* visitor analytics + real-user speed data (enable both in the Vercel dashboard) */}
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

@@ -1,7 +1,8 @@
 /*
- * Synthesised soundscape for the contact scene (no audio files): wind through
- * the grass, a rustle of leaves, crickets at night / birds by day, a low pad,
- * plus small UI blips. Exposes an analyser for the header's level bars.
+ * Contact page soundscape: the background music track (public/audio/
+ * contact-bg, in place of the old synthesized wind), a rustle of leaves,
+ * crickets at night / birds by day, a low pad, plus small UI blips.
+ * Exposes an analyser for the header's level bars.
  */
 
 export type ContactAudio = {
@@ -65,18 +66,18 @@ export function createContactAudio(): ContactAudio {
   nightBus.connect(master);
   dayBus.connect(master);
 
+  // background music, looping (WebM/Opus where supported, AAC otherwise)
+  let music: HTMLAudioElement | null = null;
   const build = () => {
-    // wind
-    const wind = noise();
-    const wf = ctx.createBiquadFilter();
-    wf.type = "bandpass";
-    wf.frequency.value = 520;
-    wf.Q.value = 0.6;
-    const wg = ctx.createGain();
-    wg.gain.value = 0.32;
-    wind.connect(wf).connect(wg).connect(master);
-    nodes.push(wind, lfo(0.07, 260, wf.frequency), lfo(0.11, 0.14, wg.gain));
-    wind.start();
+    music = new Audio();
+    music.src = music.canPlayType('audio/webm; codecs="opus"') ? "/audio/contact-bg.webm" : "/audio/contact-bg.m4a";
+    music.loop = true;
+    music.preload = "auto";
+    const mg = ctx.createGain();
+    mg.gain.value = 0.7;
+    // through master, so mute/fade and the level bars follow the music
+    ctx.createMediaElementSource(music).connect(mg).connect(master);
+    void music.play().catch(() => {});
 
     // leaves rustle
     const rustle = noise();
@@ -189,10 +190,18 @@ export function createContactAudio(): ContactAudio {
       muted = m;
       if (!started) return;
       window.clearTimeout(suspendTimer);
-      if (!m) ctx.resume();
+      if (!m) {
+        ctx.resume();
+        void music?.play().catch(() => {});
+      }
       master.gain.setTargetAtTime(m ? 0 : 0.9, ctx.currentTime, m ? 0.12 : 0.35);
-      // once faded out, stop the audio thread entirely
-      if (m) suspendTimer = window.setTimeout(() => muted && ctx.suspend(), 700);
+      // once faded out, pause the track and stop the audio thread entirely
+      if (m)
+        suspendTimer = window.setTimeout(() => {
+          if (!muted) return;
+          music?.pause();
+          ctx.suspend();
+        }, 700);
     },
     setDay: (t) => {
       day = t;
@@ -220,6 +229,11 @@ export function createContactAudio(): ContactAudio {
     levels: (out) => analyser.getByteFrequencyData(out as Uint8Array<ArrayBuffer>),
     dispose: () => {
       started = false;
+      if (music) {
+        music.pause();
+        music.removeAttribute("src");
+        music.load();
+      }
       timers.forEach(clearTimeout);
       timers = [];
       nodes.forEach((n) => {
