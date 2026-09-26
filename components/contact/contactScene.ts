@@ -31,6 +31,7 @@ type Palette = {
   sun: string;
   sunI: number;
   glow: number;
+  bloom: number;
   fireflies: number;
   mist: number;
   stars: number;
@@ -55,6 +56,7 @@ const NIGHT: Palette = {
   sun: "#c9d2ff",
   sunI: 1.4,
   glow: 1,
+  bloom: 1.6,
   fireflies: 1,
   mist: 1,
   stars: 1,
@@ -79,6 +81,7 @@ const DAY: Palette = {
   sun: "#fff4e2",
   sunI: 2.6,
   glow: 0.35,
+  bloom: 0.4,
   fireflies: 0.3,
   mist: 0.25,
   stars: 0,
@@ -455,6 +458,8 @@ export function createContactScene(canvas: HTMLCanvasElement, opts: { high: bool
       uShade: { value: col.leafShade },
       uSunDir: { value: sunDir },
       uGlow: { value: 1 },
+      // a faint cool silver, so the glow reads as moonlight
+      uGlowTint: { value: new THREE.Color("#e9eeff") },
     },
     vertexShader: /* glsl */ `
       attribute vec3 aPos;
@@ -466,6 +471,7 @@ export function createContactScene(canvas: HTMLCanvasElement, opts: { high: bool
       varying float vAO;
       varying float vDist;
       varying float vRnd;
+      varying float vPatch;
       vec3 rot(vec3 v, vec4 q) { return v + 2.0 * cross(q.xyz, cross(q.xyz, v) + q.w * v); }
       void main() {
         vUv = uv;
@@ -480,19 +486,24 @@ export function createContactScene(canvas: HTMLCanvasElement, opts: { high: bool
         p.z += sway * 0.5;
         vN = rot(vec3(0.0, 0.0, 1.0), aQuat);
         vAO = aData.y;
+        // big soft patches of light across the canopy that drift slowly
+        float n = sin(aPos.x * 1.3 + uTime * 0.25) * sin(aPos.y * 1.9 - uTime * 0.18) * sin(aPos.z * 1.6 + aPos.x * 0.7 + 1.3);
+        n += 0.5 * sin(aPos.x * 3.1 - aPos.z * 2.3 + uTime * 0.4);
+        vPatch = smoothstep(0.05, 0.75, n * 0.5 + 0.35);
         vec4 mv = modelViewMatrix * vec4(p, 1.0);
         vDist = -mv.z;
         gl_Position = projectionMatrix * mv;
       }`,
     fragmentShader: /* glsl */ `
       uniform sampler2D uMap;
-      uniform vec3 uLit, uShade, uFog, uSunDir;
-      uniform float uFogDensity, uGlow;
+      uniform vec3 uLit, uShade, uFog, uSunDir, uGlowTint;
+      uniform float uFogDensity, uGlow, uTime;
       varying vec2 vUv;
       varying vec3 vN;
       varying float vAO;
       varying float vDist;
       varying float vRnd;
+      varying float vPatch;
       ${FOG_GLSL}
       void main() {
         vec4 tex = texture2D(uMap, vUv);
@@ -505,8 +516,17 @@ export function createContactScene(canvas: HTMLCanvasElement, opts: { high: bool
         float light = (0.1 + front * 0.72 + back * 0.8) * mix(0.22, 1.0, vAO * vAO);
         light *= 0.82 + 0.3 * vRnd;
         vec3 c = mix(uShade, uLit, clamp(light, 0.0, 1.0)) * tex.r;
-        // night glow on the outer, lit leaves
-        c *= 1.0 + uGlow * 0.5 * light * vAO;
+        // divine glow: the outer, lit leaves go past white (HDR) so the bloom
+        // pass haloes them; each leaf shimmers on its own slow beat
+        float lit = clamp(light, 0.0, 1.0) * vAO;
+        float shimmer = 0.75 + 0.25 * sin(uTime * (0.8 + vRnd * 1.6) + vRnd * 30.0);
+        // glow gathers on the outer clusters that face the moon; the core stays
+        // darker, which is what makes the highlights read as light
+        // outer leaves inside a light patch glow past white; bloom haloes them
+        float outer = smoothstep(0.35, 0.95, vAO);
+        float g = vPatch * outer * (0.55 + 0.45 * clamp(light * 1.6, 0.0, 1.0));
+        c = mix(c * 0.8, c, outer);
+        c += uGlowTint * uGlow * (g * g * 5.0 + g * 0.35) * shimmer;
         gl_FragColor = vec4(mix(c, uFog, fogF(vDist, uFogDensity) * 0.85), 1.0);
       }`,
   });
@@ -612,8 +632,38 @@ export function createContactScene(canvas: HTMLCanvasElement, opts: { high: bool
 
   // ---- petals ---------------------------------------------------------------
   const PETALS = opts.mobile ? 120 : 240;
-  const petalMat = new THREE.MeshBasicMaterial({ map: leafTex, alphaTest: 0.5, side: THREE.DoubleSide, color: 0xffffff });
-  const petals = new THREE.InstancedMesh(new THREE.PlaneGeometry(0.07, 0.07), petalMat, PETALS);
+  const petalMat = new THREE.ShaderMaterial({
+    side: THREE.DoubleSide,
+    uniforms: {
+      uTime: shared.uTime,
+      uMap: { value: leafTex },
+      uColor: { value: new THREE.Color("#ffffff") },
+      uGlow: { value: 1 },
+    },
+    vertexShader: /* glsl */ `
+      uniform float uTime;
+      varying vec2 vUv;
+      varying float vPulse;
+      void main() {
+        vUv = uv;
+        float r = fract(sin(float(gl_InstanceID) * 12.9898) * 43758.5453);
+        // flare up now and then, on a different beat per petal
+        vPulse = pow(0.5 + 0.5 * sin(uTime * (1.2 + r * 2.4) + r * 40.0), 4.0);
+        gl_Position = projectionMatrix * modelViewMatrix * instanceMatrix * vec4(position, 1.0);
+      }`,
+    fragmentShader: /* glsl */ `
+      uniform sampler2D uMap;
+      uniform vec3 uColor;
+      uniform float uGlow;
+      varying vec2 vUv;
+      varying float vPulse;
+      void main() {
+        if (texture2D(uMap, vUv).a < 0.5) discard;
+        vec3 c = uColor * (0.9 + uGlow * (0.6 + vPulse * 3.2));
+        gl_FragColor = vec4(c, 1.0);
+      }`,
+  });
+  const petals = new THREE.InstancedMesh(new THREE.PlaneGeometry(0.085, 0.085), petalMat, PETALS);
   const pState = Array.from({ length: PETALS }, () => ({
     x: rand(-3.5, 3.5),
     y: rand(0, 5),
@@ -706,14 +756,16 @@ export function createContactScene(canvas: HTMLCanvasElement, opts: { high: bool
       uLens: { value: 0 },
       uBg: { value: new THREE.Color("#0f0f0f") },
       uExposure: { value: 1 },
+      tBloom: { value: null as THREE.Texture | null },
+      uBloom: { value: 1 },
     },
     vertexShader: /* glsl */ `
       varying vec2 vUv;
       void main() { vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }`,
     fragmentShader: /* glsl */ `
-      uniform sampler2D tScene;
+      uniform sampler2D tScene, tBloom;
       uniform vec2 uRes;
-      uniform float uTime, uReveal, uAspect, uLens, uExposure;
+      uniform float uTime, uReveal, uAspect, uLens, uExposure, uBloom;
       uniform vec2 uTrail[${TRAIL}];
       uniform float uTrailR[${TRAIL}];
       uniform vec3 uBg;
@@ -760,6 +812,7 @@ export function createContactScene(canvas: HTMLCanvasElement, opts: { high: bool
           col.b += texture2D(tScene, u - cc * ca).b;
         }
         col /= 6.0;
+        col += texture2D(tBloom, uv + off).rgb * uBloom * 1.35;
         col *= uExposure;
         col += rim * 0.035 + inside * 0.015;
         col = mix(col, vec3(0.9), (1.0 - clear) * 0.55 * step(0.001, uReveal));
@@ -778,11 +831,57 @@ export function createContactScene(canvas: HTMLCanvasElement, opts: { high: bool
         #include <colorspace_fragment>
       }`,
   });
+  // bloom: bright parts at quarter resolution, blurred twice, added back
+  const bloomA = new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType });
+  const bloomB = new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType });
+  const QUAD_VS = /* glsl */ `
+      varying vec2 vUv;
+      void main() { vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }`;
+  const brightMat = new THREE.ShaderMaterial({
+    depthTest: false,
+    depthWrite: false,
+    uniforms: { tInput: { value: rt.texture }, uThreshold: { value: 0.82 } },
+    vertexShader: QUAD_VS,
+    fragmentShader: /* glsl */ `
+      uniform sampler2D tInput;
+      uniform float uThreshold;
+      varying vec2 vUv;
+      void main() {
+        vec3 c = texture2D(tInput, vUv).rgb;
+        float l = max(max(c.r, c.g), c.b);
+        gl_FragColor = vec4(c * smoothstep(uThreshold, uThreshold + 0.7, l), 1.0);
+      }`,
+  });
+  const blurMat = new THREE.ShaderMaterial({
+    depthTest: false,
+    depthWrite: false,
+    uniforms: { tInput: { value: null as THREE.Texture | null }, uDir: { value: new THREE.Vector2() } },
+    vertexShader: QUAD_VS,
+    fragmentShader: /* glsl */ `
+      uniform sampler2D tInput;
+      uniform vec2 uDir;
+      varying vec2 vUv;
+      void main() {
+        vec3 c = texture2D(tInput, vUv).rgb * 0.2270270270;
+        c += texture2D(tInput, vUv + uDir * 1.3846153846).rgb * 0.3162162162;
+        c += texture2D(tInput, vUv - uDir * 1.3846153846).rgb * 0.3162162162;
+        c += texture2D(tInput, vUv + uDir * 3.2307692308).rgb * 0.0702702703;
+        c += texture2D(tInput, vUv - uDir * 3.2307692308).rgb * 0.0702702703;
+        gl_FragColor = vec4(c, 1.0);
+      }`,
+  });
   const postScene = new THREE.Scene();
   const quad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), postMat);
   quad.frustumCulled = false;
   postScene.add(quad);
   const postCam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+
+  const bloomTexel = new THREE.Vector2(1, 1);
+  const pass = (mat: THREE.ShaderMaterial, target: THREE.WebGLRenderTarget | null) => {
+    quad.material = mat;
+    renderer.setRenderTarget(target);
+    renderer.render(postScene, postCam);
+  };
 
   // ---- state ----------------------------------------------------------------
   let W = 1;
@@ -802,6 +901,11 @@ export function createContactScene(canvas: HTMLCanvasElement, opts: { high: bool
     renderer.setSize(W, H, false);
     const dpr = renderer.getPixelRatio();
     rt.setSize(Math.round(W * dpr), Math.round(H * dpr));
+    const bw = Math.max(1, Math.round((W * dpr) / 4));
+    const bh = Math.max(1, Math.round((H * dpr) / 4));
+    bloomA.setSize(bw, bh);
+    bloomB.setSize(bw, bh);
+    bloomTexel.set(1 / bw, 1 / bh);
     camera.aspect = W / H;
     // keep the tree framed on tall (mobile) canvases
     camera.fov = W / H < 0.9 ? 60 : 50;
@@ -843,7 +947,9 @@ export function createContactScene(canvas: HTMLCanvasElement, opts: { high: bool
     skyMat.uniforms.uDay.value = t;
     skyMat.uniforms.uStars.value = lerp("stars");
     postMat.uniforms.uExposure.value = lerp("exposure");
-    petalMat.color.copy(col.leafLit);
+    petalMat.uniforms.uColor.value.copy(col.leafLit);
+    petalMat.uniforms.uGlow.value = glow;
+    postMat.uniforms.uBloom.value = lerp("bloom");
     // the sun climbs higher than the moon
     sunDir.set(0.55, THREE.MathUtils.lerp(0.28, 0.6, t), -0.72).normalize();
     sun.position.copy(sunDir).multiplyScalar(20);
@@ -930,8 +1036,18 @@ export function createContactScene(canvas: HTMLCanvasElement, opts: { high: bool
 
     renderer.setRenderTarget(rt);
     renderer.render(scene, camera);
-    renderer.setRenderTarget(null);
-    renderer.render(postScene, postCam);
+    // bloom: bright pass, then two widening separable blurs
+    pass(brightMat, bloomA);
+    for (const spread of [1, 2]) {
+      blurMat.uniforms.tInput.value = bloomA.texture;
+      blurMat.uniforms.uDir.value.set(bloomTexel.x * spread, 0);
+      pass(blurMat, bloomB);
+      blurMat.uniforms.tInput.value = bloomB.texture;
+      blurMat.uniforms.uDir.value.set(0, bloomTexel.y * spread);
+      pass(blurMat, bloomA);
+    }
+    postMat.uniforms.tBloom.value = bloomA.texture;
+    pass(postMat, null);
   };
   raf = requestAnimationFrame(tick);
 
@@ -968,6 +1084,10 @@ export function createContactScene(canvas: HTMLCanvasElement, opts: { high: bool
       soft.dispose();
       shadowTex.dispose();
       rt.dispose();
+      bloomA.dispose();
+      bloomB.dispose();
+      brightMat.dispose();
+      blurMat.dispose();
       postMat.dispose();
       renderer.dispose();
     },

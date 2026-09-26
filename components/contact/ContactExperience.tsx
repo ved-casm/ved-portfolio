@@ -6,6 +6,7 @@ import { gsap } from "gsap";
 import { useLenis } from "@/components/common/LenisContext";
 import type { ContactScene } from "./contactScene";
 import type { ContactAudio } from "./contactAudio";
+import { budgetOptions, INR_OPTIONS, type BudgetOption } from "@/lib/budget";
 
 /*
  * /contact: an enter gate (with / without sound), a blob reveal into a 3D
@@ -22,7 +23,6 @@ const BUILDING = [
   "an e-commerce store",
   "not sure — let's talk",
 ];
-const BUDGET = ["< ₹50k", "₹50k – 1.5L", "₹1.5L – 3L", "₹3L – 6L", "₹6L +", "let's discuss"];
 const SOURCES = ["LinkedIn", "GitHub", "WhatsApp", "Referral", "Google search", "Other"];
 const EMAIL = "vedank0522@gmail.com";
 const GLYPHS = "!<>-_\\/[]{}—=+*^?#01";
@@ -78,6 +78,20 @@ export default function ContactExperience() {
   const [sending, setSending] = useState(false);
   const [sendError, setSendError] = useState("");
   const [errors, setErrors] = useState<Record<string, boolean>>({});
+  // budget tiers in the visitor's own currency (INR until /api/geo answers)
+  const [budget, setBudget] = useState<BudgetOption[]>(INR_OPTIONS);
+  useEffect(() => {
+    let alive = true;
+    fetch("/api/geo")
+      .then((r) => r.json())
+      .then((g: { currency?: string; rate?: number }) => {
+        if (alive && g.currency && g.rate) setBudget(budgetOptions(g.currency, g.rate));
+      })
+      .catch(() => {});
+    return () => {
+      alive = false;
+    };
+  }, []);
 
   // ---- scene boot -----------------------------------------------------------
   useEffect(() => {
@@ -366,6 +380,7 @@ export default function ContactExperience() {
         body: JSON.stringify({
           building: get("building"),
           budget: get("budget"),
+          budgetInr: budget.find((o) => o.label === get("budget"))?.inr ?? "",
           name: get("name"),
           email: get("email"),
           picture: get("picture"),
@@ -533,11 +548,11 @@ export default function ContactExperience() {
             <div role="radiogroup" aria-labelledby="ct-l-budget" className={`ct-group is-required ${errors.budget ? "has-error" : ""}`} data-group="budget">
               <p id="ct-l-budget" className="ct-legend" data-scramble>My budget is...</p>
               <div className="ct-options">
-                {BUDGET.map((o) => (
-                  <label key={o} className="ct-option" onPointerEnter={hover}>
-                    <input type="radio" name="budget" value={o} onChange={tap} />
+                {budget.map((o) => (
+                  <label key={o.label} className="ct-option" onPointerEnter={hover}>
+                    <input type="radio" name="budget" value={o.label} data-inr={o.inr} onChange={tap} />
                     <i />
-                    <span data-scramble>{o}</span>
+                    <span data-scramble>{o.label}</span>
                   </label>
                 ))}
               </div>

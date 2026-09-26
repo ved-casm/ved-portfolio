@@ -36,6 +36,7 @@ export async function POST(req: Request) {
   const brief: Brief = {
     building: clip(body.building, 120),
     budget: clip(body.budget, 60),
+    budgetInr: clip(body.budgetInr, 60),
     name: clip(body.name, 120),
     email: clip(body.email, 200),
     picture: clip(body.picture, 4000),

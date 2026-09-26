@@ -8,6 +8,8 @@
 export type Brief = {
   building: string;
   budget: string;
+  /** the same tier in INR, when the visitor saw another currency */
+  budgetInr?: string;
   name: string;
   email: string;
   picture: string;
@@ -28,7 +30,7 @@ const firstName = (n: string) => n.trim().split(/\s+/)[0] || "there";
 export function ownerEmail(b: Brief) {
   const rows: [string, string][] = [
     ["Building", b.building],
-    ["Budget", b.budget],
+    ["Budget", b.budgetInr && b.budgetInr !== b.budget ? `${b.budget}  (≈ ${b.budgetInr})` : b.budget],
     ["Name", b.name],
     ["Email", b.email],
     ["Found me through", b.sources.join(", ") || "—"],
