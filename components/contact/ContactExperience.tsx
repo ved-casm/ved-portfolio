@@ -630,7 +630,7 @@ export default function ContactExperience() {
       <div className="ct-gate" aria-hidden={phase === "done"}>
         <canvas ref={smokeRef} className="ct-gate__smoke" aria-hidden="true" />
         <div className="ct-gate__brand">
-          <img src="/monogram-white.avif" alt="" width={487} height={459} />
+          <img src="/monogram-white-sm.avif" alt="" width={160} height={151} />
           <p>Vedank Gaur</p>
           <span>Websites &amp; digital products,
             <br />

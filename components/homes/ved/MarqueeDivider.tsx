@@ -388,7 +388,7 @@ export default function MarqueeDivider() {
     <BlurSection className="w-full overflow-hidden bg-[#120F17] py-10">
       <style jsx global>{`
         .marquee-font {
-          font-family: "Cormorant", "Cormorant Garamond", serif;
+          font-family: var(--font-cormorant), "Cormorant", "Cormorant Garamond", serif;
         }
       `}</style>
 

@@ -1,5 +1,5 @@
 import "@/styles/template.css";
-import { JetBrains_Mono, Manrope } from "next/font/google";
+import { Cormorant, Geist, JetBrains_Mono, Manrope } from "next/font/google";
 import Header1 from "@/components/headers/Header1";
 import TemplateRuntimeProvider from "@/components/common/TemplateRuntimeProvider";
 import MenuRuntimeShell from "@/components/headers/MenuRuntimeShell";
@@ -15,6 +15,18 @@ const manrope = Manrope({
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-jetbrains-mono",
+});
+
+// self-hosted by next/font (no render-blocking Google Fonts request)
+const geist = Geist({
+  subsets: ["latin"],
+  variable: "--font-geist",
+});
+
+const cormorant = Cormorant({
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  variable: "--font-cormorant",
 });
 
 export const metadata: Metadata = {
@@ -48,7 +60,7 @@ export default async function RootLayout({
         />
       </head>
       <body
-        className={`${manrope.variable} ${jetbrainsMono.variable}`}
+        className={`${manrope.variable} ${jetbrainsMono.variable} ${geist.variable} ${cormorant.variable}`}
         style={
           {
             "--_font-default": "var(--font-manrope)",
