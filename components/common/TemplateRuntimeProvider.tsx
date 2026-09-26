@@ -53,14 +53,15 @@ export default function TemplateRuntimeProvider({
     if (!transitionEl) markPageRevealed();
     if (transitionEl) {
       pageTransitionRevealCompleted = true;
-      // intros can start as the curtain begins to lift
-      gsap.delayedCall(0.25, markPageRevealed);
       gsap.to(transitionEl, {
         y: "-100%",
         duration: 0.7,
         ease: "hop",
         onComplete: () => {
           gsap.set(transitionEl, { pointerEvents: "none" });
+          // page intros (e.g. /about's word stack) start only now, once the
+          // loader and its curtain are completely out of the way
+          markPageRevealed();
         },
       });
     }
