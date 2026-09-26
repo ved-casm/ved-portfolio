@@ -18,7 +18,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
+  metadataBase: new URL(process.env.SITE_URL || process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
   title: "Vedank Gaur | Frontend & UI/UX Designer",
   description:
     "Vedank Gaur designs and builds websites and digital products end to end, from the first sketch to launch. Based in Jaipur, IN.",

@@ -52,7 +52,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: "Too many messages — please try again later." }, { status: 429 });
   }
 
-  const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, CONTACT_TO, NEXT_PUBLIC_SITE_URL } = process.env;
+  const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, CONTACT_TO } = process.env;
+  // server-only; the old NEXT_PUBLIC_ name still works as a fallback
+  const siteUrl = process.env.SITE_URL || process.env.NEXT_PUBLIC_SITE_URL;
   if (!SMTP_USER || !SMTP_PASS) {
     console.error("[contact] SMTP_USER / SMTP_PASS are not set");
     return NextResponse.json({ ok: false, error: "Email isn't set up yet." }, { status: 500 });
@@ -77,7 +79,7 @@ export async function POST(req: Request) {
       text: mine.text,
       html: mine.html,
     });
-    const thanks = thankYouEmail(brief, { siteUrl: NEXT_PUBLIC_SITE_URL, ownerEmail: to });
+    const thanks = thankYouEmail(brief, { siteUrl, ownerEmail: to });
     // the thank-you is a courtesy: a bounce here shouldn't fail the request
     await transport
       .sendMail({ from, to: brief.email, replyTo: to, subject: thanks.subject, text: thanks.text, html: thanks.html })
