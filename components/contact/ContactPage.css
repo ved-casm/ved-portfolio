@@ -1,12 +1,10 @@
-@import url("https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,400;0,500;1,400;1,500&display=swap");
-
 /* /contact — scene + brief form. Root font-size is 10px, so 1rem = 10px. */
 .ct {
   --ct-bg: #0f0f0f;
   --ct-fg: #f2f2f2;
   --ct-muted: rgba(255, 255, 255, 0.52);
   --ct-line: rgba(255, 255, 255, 0.14);
-  --ct-serif: "Cormorant", serif;
+  --ct-serif: var(--font-cormorant), "Cormorant", serif;
   --ct-mono: var(--_font-accent), monospace;
   position: relative;
   background: var(--ct-bg);

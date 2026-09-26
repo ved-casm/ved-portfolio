@@ -119,7 +119,7 @@ export default function Nav({
             <Link href={`/`} className="menu-logo">
               <img
                 className="mxd-logo__image"
-                src="/monogram-white.avif"
+                src="/monogram-white-sm.avif"
                 alt="VED" />
               {/* logo text */}
               <div className="menu-logo__text">

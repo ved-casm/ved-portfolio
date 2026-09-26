@@ -1,6 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300..700;1,300..700&display=swap');
-
 /* ---------------------------------------------------------------
    RevealHero.module.css — Dark Mode Design System
 
@@ -130,7 +127,7 @@
   margin: 0;
   padding-top: var(--pad);
   max-width: 34ch;
-  font-family: 'Cormorant', serif;
+  font-family: var(--font-cormorant), "Cormorant", serif;
   font-style: italic;
   font-weight: 500;
   font-size: var(--fs);
@@ -150,7 +147,7 @@
   z-index: 3;
   margin: 0;
   white-space: nowrap;
-  font-family: 'Geist', sans-serif;
+  font-family: var(--font-geist), "Geist", sans-serif;
   font-size: clamp(15px, 1.6vw, 24px);
   font-weight: 300;
   letter-spacing: 0.02em;
@@ -168,7 +165,7 @@
   justify-content: space-between;
   align-items: center;
   gap: 20px;
-  font-family: 'Geist', sans-serif;
+  font-family: var(--font-geist), "Geist", sans-serif;
   font-size: 14px;
   letter-spacing: 0.03em;
   color: #ffffff;
@@ -181,7 +178,7 @@
 }
 
 .locationText {
-  font-family: 'Geist', sans-serif;
+  font-family: var(--font-geist), "Geist", sans-serif;
   font-size: clamp(13px, 1vw, 16px);
   font-weight: 500;
   color: rgba(255, 255, 255, 0.9);
@@ -200,7 +197,7 @@
 }
 
 .scrollCue {
-  font-family: 'Geist', sans-serif;
+  font-family: var(--font-geist), "Geist", sans-serif;
   font-size: clamp(13px, 1vw, 16px);
   font-weight: 500;
   letter-spacing: 0.05em;
@@ -216,7 +213,7 @@
 }
 
 .hint {
-  font-family: 'Geist', sans-serif;
+  font-family: var(--font-geist), "Geist", sans-serif;
   font-size: 12px;
   letter-spacing: 0.05em;
   color: rgba(255, 255, 255, 0.6);
@@ -235,7 +232,7 @@
 }
 
 .socialLink {
-  font-family: 'Geist', sans-serif;
+  font-family: var(--font-geist), "Geist", sans-serif;
   font-size: clamp(13px, 1vw, 16px);
   font-weight: 600;
   letter-spacing: 0.06em;

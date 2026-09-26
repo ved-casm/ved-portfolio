@@ -32,7 +32,7 @@ export default function Header1() {
               aria-label="Vedank Gaur, home"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/monogram-white.avif" alt="" width={487} height={459} />
+              <img src="/monogram-white-sm.avif" alt="" width={160} height={151} />
             </Link>
           </div>
         )}
