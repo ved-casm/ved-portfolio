@@ -179,13 +179,13 @@ export function getNext(slug: string): ShowcaseNext {
   // 4 image previews from the next project's gallery, logo in the middle
   const imgs = next.gallery
     .filter((m): m is Extract<ShowcaseMedia, { type: "image" }> => m.type === "image")
-    .slice(0, 4)
+    .slice(0, 5)
     .map((m) => ({ src: m.src }));
   return {
     leftWord: "Up",
     rightWord: "next",
     name: next.intro.titleLines.join(" ").toLowerCase(),
     href: `/works/${next.slug}`,
-    medias: [...imgs.slice(0, 2), LOGO, ...imgs.slice(2)],
+    medias: [...imgs.slice(0, 3), ...imgs.slice(3)],
   };
 }
