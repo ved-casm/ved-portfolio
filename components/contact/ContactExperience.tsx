@@ -3,6 +3,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useLenis } from "@/components/common/LenisContext";
 import type { ContactScene } from "./contactScene";
 import type { ContactAudio } from "./contactAudio";
@@ -75,6 +76,20 @@ export default function ContactExperience() {
   const [high, setHigh] = useState(true);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [sent, setSent] = useState(false);
+  // the form <-> thank-you swap changes the page height a lot; re-measure so
+  // the footer below (and its scroll reveals) line up with the new layout
+  const firstSent = useRef(true);
+  useEffect(() => {
+    if (firstSent.current) {
+      firstSent.current = false;
+      return;
+    }
+    const id = requestAnimationFrame(() => {
+      lenisRef.current?.resize();
+      ScrollTrigger.refresh();
+    });
+    return () => cancelAnimationFrame(id);
+  }, [sent]);
   const [sending, setSending] = useState(false);
   const [sendError, setSendError] = useState("");
   const [errors, setErrors] = useState<Record<string, boolean>>({});
