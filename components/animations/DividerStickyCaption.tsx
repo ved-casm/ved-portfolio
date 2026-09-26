@@ -8,6 +8,7 @@ import { useEffect, useRef, type ReactNode } from "react";
 import { CommonScrollAnimated } from "@/components/animations/CommonScrollAnimated";
 import TextScramble from "@/components/animations/TextScramble";
 import "./DividerStickyCaption.css";
+import { videoPoster, videoSources } from "@/lib/lazyVideo";
 export type DividerStickyCaptionProps = {
   topCtaLabel: string;
   topCtaHref: string;
@@ -138,13 +139,17 @@ export default function DividerStickyCaption({
                             ref={(el) => {
                               videoRefs.current[0] = el;
                             }}
-                            src="/img/web-design.mp4"
+                            poster={videoPoster("/img/web-design.mp4")}
                             muted
                             loop
                             playsInline
-                            preload="metadata"
+                            preload="none"
                             style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-                          />
+                          >
+                            {videoSources("/img/web-design.mp4").map((v) => (
+                              <source key={v.type} src={v.src} type={v.type} />
+                            ))}
+                          </video>
                         </CommonScrollAnimated>
                         <div className="scroll-images-row__tags">
                           <TextScramble className="tag tag-m tag-medium mxd-scramble" style={{ color: "#ffffff" }}>
@@ -171,13 +176,17 @@ export default function DividerStickyCaption({
                             ref={(el) => {
                               videoRefs.current[1] = el;
                             }}
-                            src="/img/ui-ux-design.mp4"
+                            poster={videoPoster("/img/ui-ux-design.mp4")}
                             muted
                             loop
                             playsInline
-                            preload="metadata"
+                            preload="none"
                             style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-                          />
+                          >
+                            {videoSources("/img/ui-ux-design.mp4").map((v) => (
+                              <source key={v.type} src={v.src} type={v.type} />
+                            ))}
+                          </video>
                         </CommonScrollAnimated>
                         <div className="scroll-images-row__tags">
                           <TextScramble className="tag tag-m tag-medium mxd-scramble" style={{ color: "#ffffff" }}>
@@ -198,13 +207,17 @@ export default function DividerStickyCaption({
                             ref={(el) => {
                               videoRefs.current[2] = el;
                             }}
-                            src="/img/landing-page.mp4"
+                            poster={videoPoster("/img/landing-page.mp4")}
                             muted
                             loop
                             playsInline
-                            preload="metadata"
+                            preload="none"
                             style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-                          />
+                          >
+                            {videoSources("/img/landing-page.mp4").map((v) => (
+                              <source key={v.type} src={v.src} type={v.type} />
+                            ))}
+                          </video>
                         </CommonScrollAnimated>
                         <div className="scroll-images-row__tags">
                           <TextScramble className="tag tag-m tag-medium mxd-scramble" style={{ color: "#ffffff" }}>
@@ -232,13 +245,17 @@ export default function DividerStickyCaption({
                             ref={(el) => {
                               videoRefs.current[3] = el;
                             }}
-                            src="/img/e-com.mp4"
+                            poster={videoPoster("/img/e-com.mp4")}
                             muted
                             loop
                             playsInline
-                            preload="metadata"
+                            preload="none"
                             style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-                          />
+                          >
+                            {videoSources("/img/e-com.mp4").map((v) => (
+                              <source key={v.type} src={v.src} type={v.type} />
+                            ))}
+                          </video>
                         </CommonScrollAnimated>
                         <div className="scroll-images-row__tags">
                           <TextScramble className="tag tag-m tag-medium mxd-scramble" style={{ color: "#ffffff" }}>
@@ -259,13 +276,17 @@ export default function DividerStickyCaption({
                             ref={(el) => {
                               videoRefs.current[4] = el;
                             }}
-                            src="/img/virtaul-assistant.mp4"
+                            poster={videoPoster("/img/virtaul-assistant.mp4")}
                             muted
                             loop
                             playsInline
-                            preload="metadata"
+                            preload="none"
                             style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-                          />
+                          >
+                            {videoSources("/img/virtaul-assistant.mp4").map((v) => (
+                              <source key={v.type} src={v.src} type={v.type} />
+                            ))}
+                          </video>
                         </CommonScrollAnimated>
                         <div className="scroll-images-row__tags">
                           <TextScramble className="tag tag-m tag-medium mxd-scramble" style={{ color: "#ffffff" }}>

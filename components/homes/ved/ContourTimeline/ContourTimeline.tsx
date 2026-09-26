@@ -11,6 +11,7 @@ import {
 } from "./defaultMilestones";
 import styles from "./ContourTimeline.module.css";
 import ScrollRevealText from "@/components/animations/ScrollRevealText";
+import { videoPoster, videoSources } from "@/lib/lazyVideo";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -42,13 +43,23 @@ const MilestoneMediaBox = memo(function MilestoneMediaBox({
   activeIndex: number;
 }) {
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+  const boxRef = useRef<HTMLDivElement>(null);
+  // nothing downloads or plays until the timeline is near the screen
+  const [near, setNear] = useState(false);
+  useEffect(() => {
+    const box = boxRef.current;
+    if (!box) return;
+    const io = new IntersectionObserver(([e]) => setNear(e.isIntersecting), { rootMargin: "50% 0px" });
+    io.observe(box);
+    return () => io.disconnect();
+  }, []);
 
   // 1. Play active video, pause inactive to relieve laptop GPU decoder
   useEffect(() => {
     milestones.forEach((_, idx) => {
       const v = videoRefs.current[idx];
       if (!v) return;
-      if (idx === activeIndex) {
+      if (idx === activeIndex && near) {
         if (v.paused) {
           void v.play().catch(() => {});
         }
@@ -58,12 +69,12 @@ const MilestoneMediaBox = memo(function MilestoneMediaBox({
         }
       }
     });
-  }, [activeIndex, milestones]);
+  }, [activeIndex, milestones, near]);
 
   // 2. Prevent Chrome from pausing active video during desktop wheel/scroll events
   useEffect(() => {
     const activeVideo = videoRefs.current[activeIndex];
-    if (!activeVideo) return;
+    if (!activeVideo || !near) return;
 
     const resumePlayback = () => {
       if (document.visibilityState === "visible" && activeVideo.paused) {
@@ -82,10 +93,10 @@ const MilestoneMediaBox = memo(function MilestoneMediaBox({
       window.removeEventListener("scroll", resumePlayback);
       window.removeEventListener("wheel", resumePlayback);
     };
-  }, [activeIndex]);
+  }, [activeIndex, near]);
 
   return (
-    <div className={styles.imageBox}>
+    <div ref={boxRef} className={styles.imageBox}>
       {milestones.map((m, idx) => {
         const isActive = idx === activeIndex;
         if (!m.media) return null;
@@ -99,15 +110,18 @@ const MilestoneMediaBox = memo(function MilestoneMediaBox({
               className={`${styles.image} ${
                 isActive ? styles.mediaActive : styles.mediaHidden
               }`}
-              src={m.media}
-              autoPlay
+              poster={videoPoster(m.media)}
               muted
               loop
               playsInline
-              preload="auto"
+              preload="none"
               disablePictureInPicture
               disableRemotePlayback
-            />
+            >
+              {videoSources(m.media).map((v) => (
+                <source key={v.type} src={v.src} type={v.type} />
+              ))}
+            </video>
           );
         }
         return (

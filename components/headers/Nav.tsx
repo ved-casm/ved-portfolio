@@ -2,10 +2,11 @@
 
 /* eslint-disable react-hooks/refs -- RefObjects passed to `ref={}`; slotters only touch refs in callbacks */
 import type { MutableRefObject } from "react";
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import AutoplayLoopVideo from "@/components/media/AutoplayLoopVideo";
+import { videoSources } from "@/lib/lazyVideo";
 import { useMxdMenuGsap, useMxdMenuGsapRefs } from "@/hooks/useMxdMenuGsap";
 import TextScramble from "@/components/animations/TextScramble";
 
@@ -45,6 +46,36 @@ export default function Nav({
 }: NavProps) {
   const pathname = usePathname();
   const g = useMxdMenuGsapRefs();
+  const menuVideoRef = useRef<HTMLVideoElement>(null);
+
+  // the menu video only downloads once someone reaches for the menu, and only
+  // plays while the menu is open (the hamburger carries .active then)
+  useEffect(() => {
+    const v = menuVideoRef.current;
+    if (!hamburgerNode || !v) return;
+    const warm = () => {
+      if (v.preload === "auto") return;
+      v.preload = "auto";
+      v.load();
+    };
+    const sync = () => {
+      if (hamburgerNode.classList.contains("active")) {
+        warm();
+        void v.play().catch(() => {});
+      } else {
+        v.pause();
+      }
+    };
+    const mo = new MutationObserver(sync);
+    mo.observe(hamburgerNode, { attributes: true, attributeFilter: ["class"] });
+    hamburgerNode.addEventListener("pointerenter", warm);
+    hamburgerNode.addEventListener("focus", warm);
+    return () => {
+      mo.disconnect();
+      hamburgerNode.removeEventListener("pointerenter", warm);
+      hamburgerNode.removeEventListener("focus", warm);
+    };
+  }, [hamburgerNode]);
 
   const homeSectionActive = pathMatches(pathname, "/");
   const worksSectionActive = pathMatches(pathname, "/works") || pathname.startsWith("/works/");
@@ -57,9 +88,9 @@ export default function Nav({
 
   const headerSlots = useMemo(() => makeSlotters(g.headerSplitTargets, 3), [g]);
   const mainSlots = useMemo(() => makeSlotters(g.mainMenuLinkSpans, 10), [g]);
-  const contactSlots = useMemo(() => makeSlotters(g.contactAnchors, 8), [g]);
+  const contactSlots = useMemo(() => makeSlotters(g.contactAnchors, 7), [g]);
   const contactRevealSlots = useMemo(
-    () => makeSlotters(g.contactRevealTargets, 8),
+    () => makeSlotters(g.contactRevealTargets, 7),
     [g],
   );
   const footerSlots = useMemo(() => makeSlotters(g.footerSplitTargets, 4), [g]);
@@ -88,7 +119,7 @@ export default function Nav({
             <Link href={`/`} className="menu-logo">
               <img
                 className="mxd-logo__image"
-                src="/monogram-white.png"
+                src="/monogram-white.avif"
                 alt="VED" />
               {/* logo text */}
               <div className="menu-logo__text">
@@ -101,13 +132,11 @@ export default function Nav({
           {/* Menu Media Start */}
           <div className="mxd-menu__media">
             <div ref={g.mediaWrapper} className="menu-media__wrapper">
-              {/* <Image   alt="Image"    src="/img/gifs/dolores.gif" width="322" height="374" /> */}
               <AutoplayLoopVideo
-                poster="video/900x1280_menu.webp"
-                sources={[
-                  { type: "video/mp4", src: "video/900x1280_menu.mp4" },
-                  { type: "video/webm", src: "video/900x1280_menu.webm" },
-                ]}
+                ref={menuVideoRef}
+                manual
+                poster="/video/900x1280_menu-poster.avif"
+                sources={videoSources("/video/900x1280_menu.mp4")}
               />
             </div>
           </div>

@@ -9,6 +9,7 @@ import CommonLoadAnimation, {
 import CommonAnimatedText from "@/components/animations/CommonAnimatedText";
 import TextScramble from "@/components/animations/TextScramble";
 import SmoothAnchorLink from "@/components/common/SmoothAnchorLink";
+import { videoPoster, videoSources } from "@/lib/lazyVideo";
 
 export default function InnerHeadline() {
   return (
@@ -31,17 +32,8 @@ export default function InnerHeadline() {
                       }}
                     >
                       <AutoplayLoopVideo
-                        poster="video/1280x720_stone-geometry-banner.webp"
-                        sources={[
-                          {
-                            type: "video/mp4",
-                            src: "video/1280x720_stone-geometry.mp4",
-                          },
-                          {
-                            type: "video/webm",
-                            src: "video/1280x720_stone-geometry.webm",
-                          },
-                        ]}
+                        poster={videoPoster("/video/1280x720_stone-geometry.mp4")}
+                        sources={videoSources("/video/1280x720_stone-geometry.mp4")}
                       />
                     </div>
                     {/* <Image   alt="Azurio Template Sample Image"    src="/img/backgrounds/1920x1280_bg01.webp" width="1920" height="1280" /> */}

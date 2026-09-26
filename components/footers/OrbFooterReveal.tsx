@@ -7,6 +7,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Footer1 from "@/components/footers/Footer1";
 import "./OrbFooterReveal.css";
+import { videoPoster, videoSources } from "@/lib/lazyVideo";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -384,8 +385,10 @@ export default function OrbFooterReveal({
         >
           <span aria-hidden="true">
             <span className="orb-reveal__capsule">
-              <video muted loop playsInline preload="none">
-                <source src="/video/1280x720_bus.mp4" type="video/mp4" />
+              <video muted loop playsInline preload="none" poster={videoPoster("/video/1280x720_bus.mp4")}>
+                {videoSources("/video/1280x720_bus.mp4").map((v) => (
+                  <source key={v.type} src={v.src} type={v.type} />
+                ))}
               </video>
             </span>
             C<span className="orb-reveal__ph orb-reveal__ph--o" />NTACT ME
@@ -398,10 +401,10 @@ export default function OrbFooterReveal({
       </div>
       <div className="orb-reveal__layer" aria-hidden="true">
         <div className="orb-reveal__planet orb-reveal__p1">
-          <Image src="/img/demo/planet-01.webp" alt="" width={400} height={404} />
+          <Image src="/img/demo/planet-01.avif" alt="" width={400} height={404} />
         </div>
         <div className="orb-reveal__planet orb-reveal__p2">
-          <Image src="/img/demo/planet-02.webp" alt="" width={250} height={255} />
+          <Image src="/img/demo/planet-02.avif" alt="" width={250} height={255} />
         </div>
       </div>
     </div>

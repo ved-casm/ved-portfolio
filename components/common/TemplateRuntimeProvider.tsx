@@ -22,6 +22,8 @@ import CustomCursor from "@/components/cursor/CustomCursor";
 
 import Loader from "@/components/common/Loader";
 import { markPageRevealed } from "@/lib/pageReveal";
+import { startLazyVideos } from "@/lib/lazyVideo";
+import { coalesceScrollTriggerRefresh } from "@/lib/scrollRefresh";
 
 gsap.registerPlugin(ScrollTrigger, CustomEase);
 CustomEase.create("hop", ".87, 0, .13, 1");
@@ -29,6 +31,9 @@ CustomEase.create("common", ".23, .65, .74, 1.09");
 CustomEase.create("custom", ".23, .65, .74, 1.09");
 
 let pageTransitionRevealCompleted = false;
+
+// collapse same-frame ScrollTrigger.refresh() calls (see lib/scrollRefresh)
+coalesceScrollTriggerRefresh();
 
 export default function TemplateRuntimeProvider({
   children,
@@ -66,6 +71,9 @@ export default function TemplateRuntimeProvider({
     if (transitionEl && pageTransitionRevealCompleted) {
       gsap.set(transitionEl, { y: "-100%", pointerEvents: "none" });
     }
+
+    // loop videos download and play only near the viewport
+    const stopLazyVideos = startLazyVideos();
 
     const instance = new Lenis();
     lenisRef.current = instance;
@@ -144,6 +152,7 @@ export default function TemplateRuntimeProvider({
       window.removeEventListener("resize", onResize);
       window.removeEventListener("pageshow", onPageShow);
       window.history.scrollRestoration = prevScrollRestoration;
+      stopLazyVideos();
       ScrollTrigger.getAll().forEach((st) => st.kill());
       ScrollTrigger.defaults(prevScrollTriggerDefaults);
       lenisRef.current = null;
@@ -155,6 +164,9 @@ export default function TemplateRuntimeProvider({
   useLayoutEffect(() => {
     if (isFirstPathRef.current) {
       isFirstPathRef.current = false;
+      // first load: make sure we start at the top (no restored scroll)
+      window.scrollTo(0, 0);
+      lenisRef.current?.scrollTo(0, { immediate: true, force: true });
       return;
     }
 

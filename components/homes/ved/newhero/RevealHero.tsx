@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import styles from "./RevealHero.module.css";
 import Wordmark from "./Wordmark";
+import { videoPoster, videoSources } from "@/lib/lazyVideo";
 
 export interface RevealHeroProps {
   videoSrc?: string;
@@ -35,7 +36,7 @@ export default function RevealHero({
   taglineLine2 = "It's how I think.",
   roleText = "Frontend & UI/UX Designer",
   locationText = "Based in Jaipur, IN",
-  monogramSrc = "/monogram-white.png",
+  monogramSrc = "/monogram-white.avif",
   linkedinHref = "https://www.linkedin.com/in/vedank-gaur/",
   githubHref = "https://github.com/ved-casm",
 
@@ -1014,10 +1015,21 @@ export default function RevealHero({
       return dt;
     }
 
+    // canvas size is cached (reading clientWidth every frame forced a layout
+    // per frame); a ResizeObserver marks it stale
+    let cssW = canvas ? canvas.clientWidth : 0;
+    let cssH = canvas ? canvas.clientHeight : 0;
+    const sizeObserver = new ResizeObserver(() => {
+      if (!canvas) return;
+      cssW = canvas.clientWidth;
+      cssH = canvas.clientHeight;
+    });
+    if (canvas) sizeObserver.observe(canvas);
+
     function resizeCanvas() {
       if (!canvas) return false;
-      const width = scaleByPixelRatio(canvas.clientWidth);
-      const height = scaleByPixelRatio(canvas.clientHeight);
+      const width = scaleByPixelRatio(cssW);
+      const height = scaleByPixelRatio(cssH);
       if (canvas.width !== width || canvas.height !== height) {
         canvas.width = width;
         canvas.height = height;
@@ -1027,7 +1039,8 @@ export default function RevealHero({
     }
 
     function scaleByPixelRatio(input: number) {
-      const pixelRatio = window.devicePixelRatio || 1;
+      // a soft fluid over video doesn't need retina resolution
+      const pixelRatio = Math.min(window.devicePixelRatio || 1, 1.5);
       return Math.floor(input * pixelRatio);
     }
 
@@ -1399,6 +1412,7 @@ export default function RevealHero({
     return () => {
       cancelAnimationFrame(animationFrameId);
       io.disconnect();
+      sizeObserver.disconnect();
       video.removeEventListener("loadedmetadata", onVideoMeta);
       window.removeEventListener("mousemove", onPointerMove);
       window.removeEventListener("mousedown", onPointerDown);
@@ -1425,14 +1439,17 @@ export default function RevealHero({
       <video
         ref={videoRef}
         className={styles.source}
-        src={videoSrc}
         muted
         loop
         playsInline
         preload="auto"
         crossOrigin="anonymous"
         aria-hidden="true"
-      />
+      >
+        {videoSources(videoSrc).map((v) => (
+          <source key={v.type} src={v.src} type={v.type} />
+        ))}
+      </video>
 
       {/* Layer 1: SVG Wordmark scaling 1-to-1 with video cover math */}
       <span className={styles.srOnly}>{word}</span>

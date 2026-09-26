@@ -9,13 +9,13 @@ interface LoaderProps {
 }
 
 const LOADER_IMAGES = [
-  "/img/loa_01.webp",
-  "/img/loa_02.webp",
-  "/img/loa_03.webp",
-  "/img/loa_04.webp",
-  "/img/loa_05.webp",
-  "/img/loa_06.webp",
-  "/img/loa_07.webp",
+  "/img/loa_01.avif",
+  "/img/loa_02.avif",
+  "/img/loa_03.avif",
+  "/img/loa_04.avif",
+  "/img/loa_05.avif",
+  "/img/loa_06.avif",
+  "/img/loa_07.avif",
 ];
 
 export default function Loader({ onComplete }: LoaderProps) {

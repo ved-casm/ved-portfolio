@@ -1,15 +1,6 @@
 "use client";
 
-import {
-  forwardRef,
-  useCallback,
-  useEffect,
-  useRef,
-  type ReactNode,
-  type Ref,
-  type VideoHTMLAttributes,
-} from "react";
-import { usePathname } from "next/navigation";
+import { forwardRef, type ReactNode, type VideoHTMLAttributes } from "react";
 
 export type AutoplayVideoSource = {
   src: string;
@@ -33,89 +24,38 @@ export function toPublicMediaUrl(path: string): string {
 
 export type AutoplayLoopVideoProps = Omit<
   VideoHTMLAttributes<HTMLVideoElement>,
-  "autoPlay" | "muted" | "loop" | "playsInline" | "children"
+  "autoPlay" | "muted" | "loop" | "playsInline" | "children" | "preload"
 > & {
   sources: AutoplayVideoSource[];
   children?: ReactNode;
+  /** true: the owner starts playback itself (e.g. the menu video) */
+  manual?: boolean;
 };
 
-function assignRef<T>(ref: Ref<T> | undefined, value: T | null) {
-  if (!ref) return;
-  if (typeof ref === "function") {
-    ref(value);
-  } else {
-    (ref as React.MutableRefObject<T | null>).current = value;
-  }
-}
-
 /**
- * Background / loop videos: valid boolean props, root-relative URLs, and a guarded
- * `play()` so autoplay works after hydration and when returning to the tab (mobile/desktop).
+ * Background / loop videos. Nothing downloads at page load: the video renders
+ * with preload="none", and lib/lazyVideo plays it as it nears the viewport
+ * (and pauses it off screen). The poster shows until the first frame is ready.
  */
 const AutoplayLoopVideo = forwardRef<HTMLVideoElement, AutoplayLoopVideoProps>(
-  function AutoplayLoopVideo(
-    { sources, className, poster, preload = "auto", children, ...rest },
-    forwardedRef,
-  ) {
-    const innerRef = useRef<HTMLVideoElement>(null);
-    const pathname = usePathname();
-
-    const setVideoRef = useCallback(
-      (node: HTMLVideoElement | null) => {
-        innerRef.current = node;
-        assignRef(forwardedRef, node);
-      },
-      [forwardedRef],
-    );
-
-    const posterUrl =
-      poster != null ? toPublicMediaUrl(String(poster)) : undefined;
-    const normSources = sources.map((s) => ({
-      ...s,
-      src: toPublicMediaUrl(s.src),
-    }));
-
-    useEffect(() => {
-      const v = innerRef.current;
-      if (!v) return;
-      const tryPlay = () => {
-        void v.play().catch(() => {});
-      };
-      tryPlay();
-      v.addEventListener("canplay", tryPlay);
-      const onVis = () => {
-        if (document.visibilityState === "visible") tryPlay();
-      };
-      document.addEventListener("visibilitychange", onVis);
-      return () => {
-        v.removeEventListener("canplay", tryPlay);
-        document.removeEventListener("visibilitychange", onVis);
-      };
-    }, []);
-
-    useEffect(() => {
-      const v = innerRef.current;
-      if (!v) return;
-      // Soft navigations can leave loop videos paused/not initialized.
-      v.load();
-      void v.play().catch(() => {});
-    }, [pathname]);
-
+  function AutoplayLoopVideo({ sources, className, poster, manual = false, children, ...rest }, ref) {
+    const posterUrl = poster != null ? toPublicMediaUrl(String(poster)) : undefined;
     return (
       <video
-        ref={setVideoRef}
+        ref={ref}
         className={className}
         poster={posterUrl}
-        preload={preload}
-        autoPlay
+        preload="none"
+        data-autoplay={manual ? "manual" : "auto"}
         muted
         loop
         playsInline
         {...rest}
       >
-        {normSources.map((s) => (
-          <source key={`${s.src}-${s.type}`} src={s.src} type={s.type} />
-        ))}
+        {sources.map((s) => {
+          const src = toPublicMediaUrl(s.src);
+          return <source key={`${src}-${s.type}`} src={src} type={s.type} />;
+        })}
         {children}
       </video>
     );

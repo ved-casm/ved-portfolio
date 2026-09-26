@@ -77,7 +77,7 @@ export function ownerEmail(b: Brief) {
 // ---- to the sender -----------------------------------------------------------
 export function thankYouEmail(b: Brief, opts: { siteUrl?: string; ownerEmail: string }) {
   const name = firstName(b.name);
-  const logo = opts.siteUrl ? `${opts.siteUrl.replace(/\/$/, "")}/monogram-white.png` : "";
+  const logo = opts.siteUrl ? `${opts.siteUrl.replace(/\/$/, "")}/email/monogram-white.png` : "";
   const site = opts.siteUrl || "";
   const steps = [
     ["01", "I read your brief", "Properly, start to finish — usually the same day."],
