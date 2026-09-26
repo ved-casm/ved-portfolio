@@ -111,7 +111,7 @@
   gap: clamp(12px, 1.2vw, 18px);
 }
 
-/* newmonogram-white.png is 408x483 with the glyph in its lower 74.5%
+/* newmonogram-white.avif is 408x483 with the glyph in its lower 74.5%
    (y 123-483). Size the image so the glyph spans the tagline's cap height of
    line 1 to the baseline of line 2 (1.83em), and pull it up by the empty top
    band so the glyph's top meets line 1's cap top (0.29em below the line). */

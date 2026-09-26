@@ -13,7 +13,7 @@ import {
 
 const N_HEADER = 3;
 const N_MAIN_SPANS = 10;
-const N_CONTACT = 8;
+const N_CONTACT = 7; // email, phone, location + 4 socials in Nav
 const N_FOOTER = 4;
 const N_DIVIDERS = 6;
 const N_ARROWS = 4;

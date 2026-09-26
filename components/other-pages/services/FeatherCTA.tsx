@@ -503,7 +503,7 @@ export default function FeatherCTA() {
         </div>
       </div>
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img className={styles.hand} src="/img/cta/hand.webp" alt="" width={2000} height={280} />
+      <img className={styles.hand} src="/img/cta/hand.avif" alt="" width={2000} height={280} />
       <canvas className={styles.feather} aria-hidden="true" />
       <canvas className={styles.dust} aria-hidden="true" />
     </section>

@@ -62,7 +62,7 @@ const M = {
   ascension: media("ascension-healthcare", "Ascension Healthcare"),
   greenfrog: media("greenfrog-cleaning", "GreenFrog Cleaning"),
 };
-const LOGO = { src: "/newmonogram-white.png", logo: true };
+const LOGO = { src: "/newmonogram-white.avif", logo: true };
 const contactLinks = (label: string) => [
   { label, href: "/contact", variant: "experience" as const },
   { label: "Start a similar project", href: "/services", variant: "credits" as const },

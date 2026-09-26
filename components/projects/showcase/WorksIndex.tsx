@@ -7,6 +7,8 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { ShowcaseMedia, ShowcaseProject } from "./projectShowcaseData";
 import "./WorksIndex.css";
+import AutoplayLoopVideo from "@/components/media/AutoplayLoopVideo";
+import { videoPoster, videoSources } from "@/lib/lazyVideo";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -15,7 +17,7 @@ const previewOf = (p: ShowcaseProject): ShowcaseMedia => p.gallery[0] ?? p.ellip
 
 function Preview({ media, className }: { media: ShowcaseMedia; className: string }) {
   if (media.type === "video") {
-    return <video className={className} src={media.src} muted loop playsInline autoPlay preload="metadata" />;
+    return <AutoplayLoopVideo className={className} sources={videoSources(media.src)} poster={videoPoster(media.src)} />;
   }
   return <img className={className} src={media.src} alt={media.alt ?? ""} loading="lazy" />;
 }
@@ -134,7 +136,7 @@ export default function WorksIndex({ projects }: { projects: ShowcaseProject[] }
           const media = previewOf(p);
           const cls = `wi-floater__media${active === i ? " is-active" : ""}`;
           return media.type === "video" ? (
-            <video key={p.slug} className={cls} data-index={i} src={media.src} muted loop playsInline preload="metadata" />
+            <video key={p.slug} className={cls} data-index={i} src={media.src} muted loop playsInline preload="none" />
           ) : (
             <img key={p.slug} className={cls} src={media.src} alt="" loading="lazy" />
           );

@@ -5,6 +5,8 @@ import { useLayoutEffect, useRef } from "react";
 import Link from "next/link";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import AutoplayLoopVideo from "@/components/media/AutoplayLoopVideo";
+import { videoPoster, videoSources } from "@/lib/lazyVideo";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -29,7 +31,7 @@ const LINES = [
 
 const MEDIA: { src: string; video?: boolean }[] = [
   { src: "/showcase.mp4", video: true },
-  { src: "/img/about/vedank-portrait.webp" },
+  { src: "/img/about/vedank-portrait.avif" },
   { src: "/img/projects/clear-place/05.avif" },
   { src: "/showcase1.mp4", video: true },
   { src: "/img/projects/foreward-golf/08.avif" },
@@ -120,7 +122,7 @@ export default function AboutStatement() {
         {MEDIA.map((m, i) => (
           <div key={m.src + i} className={`ab-st__media ab-st__media--${i}`}>
             {m.video ? (
-              <video src={m.src} muted loop playsInline autoPlay preload="metadata" />
+              <AutoplayLoopVideo sources={videoSources(m.src)} poster={videoPoster(m.src)} />
             ) : (
               <img src={m.src} alt="" loading="lazy" />
             )}

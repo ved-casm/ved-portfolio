@@ -48,7 +48,7 @@ export default function Footer1() {
                   <Link className="mxd-logo" href={`/`}>
                     <img
                       className="mxd-logo__image"
-                      src="/monogram-white.png"
+                      src="/monogram-white.avif"
                       alt=""
                     />
                     {/* logo text */}
@@ -187,7 +187,7 @@ export default function Footer1() {
               <Image
                 className="mxd-move-slow"
                 alt="Azurio Footer Decoration Image"
-                src="/img/demo/planet-01.webp"
+                src="/img/demo/planet-01.avif"
                 width={400}
                 height={404}
               />
@@ -216,7 +216,7 @@ export default function Footer1() {
               <Image
                 className="mxd-move"
                 alt="Azurio Footer Decoration Image"
-                src="/img/demo/planet-02.webp"
+                src="/img/demo/planet-02.avif"
                 width={250}
                 height={255}
               />

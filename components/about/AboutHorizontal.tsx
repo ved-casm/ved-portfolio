@@ -7,6 +7,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 import { useLenis } from "@/components/common/LenisContext";
 import { onPageRevealed } from "@/lib/pageReveal";
+import AutoplayLoopVideo from "@/components/media/AutoplayLoopVideo";
+import { videoPoster, videoSources } from "@/lib/lazyVideo";
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
@@ -23,8 +25,8 @@ gsap.registerPlugin(ScrollTrigger, SplitText);
 
 const WORDS = ["Designer", "Coder", "Creator", "Engineer"];
 const SEQ_COUNT = 35;
-const seqSrc = (i: number) => `/img/about/seq/frame-${String(i + 1).padStart(2, "0")}.webp`;
-const PORTRAIT = "/img/about/vedank-portrait.webp";
+const seqSrc = (i: number) => `/img/about/seq/frame-${String(i + 1).padStart(2, "0")}.avif`;
+const PORTRAIT = "/img/about/vedank-portrait.avif";
 const MASK_TEXT = "MEET VEDANK";
 const DESKTOP = "(min-width: 1200px)";
 const MOBILE = "(max-width: 1199px)";
@@ -111,7 +113,29 @@ export default function AboutHorizontal() {
     let mm: gsap.MatchMedia | null = null;
     let cancelled = false;
     let stopReveal = () => { };
+    let stopMenuWait = () => { };
     const ctx = gsap.context(() => { }, root);
+
+    // runs `fn` once the overlay menu is closed (right away if it isn't open)
+    const afterMenuCloses = (fn: () => void) => {
+      const burger = document.querySelector(".mxd-menu__hamburger");
+      if (!burger || !burger.classList.contains("active")) {
+        fn();
+        return () => { };
+      }
+      let t = 0;
+      const mo = new MutationObserver(() => {
+        if (burger.classList.contains("active")) return;
+        mo.disconnect();
+        // let the overlay's close animation clear the screen
+        t = window.setTimeout(fn, 850);
+      });
+      mo.observe(burger, { attributes: true, attributeFilter: ["class"] });
+      return () => {
+        mo.disconnect();
+        window.clearTimeout(t);
+      };
+    };
 
     // ---- hero intro: words stack in, then settle ----------------------------
     const playIntro = () => {
@@ -121,7 +145,12 @@ export default function AboutHorizontal() {
       const caption = root.querySelector<HTMLElement>(".ab-hero__caption");
       const capSpan = root.querySelector<HTMLElement>(".ab-hero__caption span");
       const hint = q(".ab-hero__scroll");
-      const skip = window.scrollY > 10 || window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      // the page always opens at the top now, so only reduced motion skips it
+      const skip = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (window.scrollY > 0) {
+        window.scrollTo(0, 0);
+        lenisRef.current?.scrollTo(0, { immediate: true, force: true });
+      }
       const hr = hero.getBoundingClientRect();
       const rects = words.map((w) => w.getBoundingClientRect());
       const top = rects.map((r) => r.top - hr.top);
@@ -149,7 +178,11 @@ export default function AboutHorizontal() {
 
       // held on the first frame until the site loader has lifted
       const tl = gsap.timeline({ paused: true, defaults: { duration: 0.88, ease: "power2.out" } });
-      stopReveal = onPageRevealed(() => tl.play());
+      // start once the site loader has lifted AND the menu (if we came from
+      // it) has finished closing, so the intro isn't played behind either
+      stopReveal = onPageRevealed(() => {
+        stopMenuWait = afterMenuCloses(() => tl.play());
+      });
       if (capSpan) {
         tl.to(capSpan, { yPercent: 0, duration: 0.7, ease: "power3.out" }, 0.3);
       }
@@ -408,6 +441,7 @@ export default function AboutHorizontal() {
     return () => {
       cancelled = true;
       stopReveal();
+      stopMenuWait();
       ro.disconnect();
       mm?.revert();
       ctx.revert();
@@ -468,7 +502,7 @@ export default function AboutHorizontal() {
             <div className="ab-intro__bot">
               <div className="ab-intro__media">
                 <div className="ab-intro__video">
-                  <video src="/showcase.mp4" muted loop playsInline autoPlay preload="metadata" />
+                  <AutoplayLoopVideo sources={videoSources("/showcase.mp4")} poster={videoPoster("/showcase.mp4")} />
                 </div>
                 <div className="ab-intro__mediaText">
                   <span className="ab-intro__mediaLabel">showreel</span>

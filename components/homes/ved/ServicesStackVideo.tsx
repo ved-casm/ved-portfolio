@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Fragment, useLayoutEffect, useRef } from "react";
 import TextScramble from "@/components/animations/TextScramble";
+import { videoPoster, videoSources } from "@/lib/lazyVideo";
 import {
   initStackCardsEffects,
   initVelocityMarqueeRows,
@@ -57,8 +58,8 @@ const WEB_STUDIO_SERVICE_CARDS: WebStudioServiceCard[] = [
     rightTags: ["Aceternity UI", "Logo design", "Motion", "Hero UI"],
     titleLines: ["AthLnk", "Platform"],
     media: "video",
-    poster: "/showcase1.mp4",
-    sources: [{ type: "video/mp4", src: "/showcase.mp4" }],
+    poster: videoPoster("/showcase.mp4"),
+    sources: videoSources("/showcase.mp4"),
   },
   {
     key: "foreward",
@@ -339,6 +340,7 @@ export default function ServicesStackVideo() {
                           src={card.imageSrc}
                           width={card.imageWidth}
                           height={card.imageHeight}
+                          sizes="(max-width: 1024px) 100vw, 92vw"
                           ref={(el) => {
                             if (!el) return;
                             cardMediaRefs.current[index] = el;

@@ -35,6 +35,16 @@ export default async function RootLayout({
       color-scheme="dark"
       suppressHydrationWarning
     >
+      <head>
+        {/* runs before first paint: a reload (even a hard one) always starts at
+            the top instead of the browser restoring the old scroll position */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{history.scrollRestoration='manual'}catch(e){}window.scrollTo(0,0);",
+          }}
+        />
+      </head>
       <body
         className={`${manrope.variable} ${jetbrainsMono.variable}`}
         style={
