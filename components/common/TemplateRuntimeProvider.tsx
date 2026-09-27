@@ -175,6 +175,10 @@ export default function TemplateRuntimeProvider({
     }
 
     const l = lenisRef.current;
+    // a page may have paused scrolling (contact gate, intros); a new page
+    // always starts scrollable
+    document.documentElement.classList.remove("ct-locked");
+    l?.start();
     if (l) {
       l.scrollTo(0, { immediate: true, force: true });
     } else {
