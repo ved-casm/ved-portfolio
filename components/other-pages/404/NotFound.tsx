@@ -192,7 +192,7 @@ export default function NotFound() {
                     <CommonLoadFade index={0}>
                       <div className="mxd-error__image image-1 mxd-move-slow loading-fade">
                         <Image
-                          alt="Azurio Template Sample Image"
+                          alt=""
                           src="/img/404_03.avif"
                           width={600}
                           height={251}
@@ -201,7 +201,7 @@ export default function NotFound() {
                     </CommonLoadFade>
                     <div className="mxd-error__image image-2">
                       <Image
-                        alt="Azurio Template Sample Image"
+                        alt=""
                         src="/img/404_01.avif"
                         width={400}
                         height={480}
@@ -209,7 +209,7 @@ export default function NotFound() {
                     </div>
                     <div className="mxd-error__image image-3">
                       <Image
-                        alt="Azurio Template Sample Image"
+                        alt=""
                         src="/img/404_02.avif"
                         width={485}
                         height={400}
@@ -218,7 +218,7 @@ export default function NotFound() {
                     <CommonLoadFade index={1}>
                       <div className="mxd-error__image image-4 mxd-move-slow loading-fade">
                         <Image
-                          alt="Azurio Template Sample Image"
+                          alt=""
                           src="/img/404_04.avif"
                           width={485}
                           height={203}

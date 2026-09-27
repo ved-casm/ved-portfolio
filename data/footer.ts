@@ -64,14 +64,14 @@ export const footer1BackgroundImages: Footer1BackgroundImage[] = [
     src: "/img/demo/clouds-01.avif",
     width: 1400,
     height: 469,
-    alt: "Azurio Footer Background Image",
+    alt: "",
   },
   {
     wrapperClass: "footer-background__img2",
     src: "/img/demo/clouds-02.avif",
     width: 1200,
     height: 401,
-    alt: "Azurio Footer Background Image",
+    alt: "",
   },
 ];
 
@@ -81,6 +81,6 @@ export const footer1ForegroundImages: Footer1BackgroundImage[] = [
     src: "/img/demo/clouds-03.avif",
     width: 1200,
     height: 374,
-    alt: "Azurio Footer Foreground Image",
+    alt: "",
   },
 ];

@@ -36,7 +36,6 @@ export default function InnerHeadline() {
                         sources={videoSources("/video/1280x720_stone-geometry.mp4")}
                       />
                     </div>
-                    {/* <Image   alt="Azurio Template Sample Image"    src="/img/backgrounds/1920x1280_bg01.webp" width="1920" height="1280" /> */}
                     <div className="inner-headline__cover" />
                   </div>
                   {/* bottom positioned headline */}

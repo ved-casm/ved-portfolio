@@ -408,7 +408,7 @@ export default function Footer2({ name = "VEDANK" }: { name?: string }) {
         <div className="mxd-block">
           <div className="mxd-footer__fw-mark mxd-grid-item">
             <div className="fw-mark__wrap">
-              {/* 28cqw is tuned for narrow names like "Azurio"; VEDANK's wide
+              {/* 28cqw is tuned for narrow words; VEDANK's wide
                   letters overflow at that size. Use the "small" mark's tight
                   spacing, sized so VEDANK spans the container edge to edge. */}
               <div

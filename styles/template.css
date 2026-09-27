@@ -67,7 +67,7 @@
   /* 3 digits of tabular figures, right-aligned: nothing shifts as it counts */
   min-width: 3ch;
   text-align: right;
-  font-size: clamp(9rem, 22vw, 26rem);
+  font-size: clamp(12rem, 30vw, 26rem);
   font-variant-numeric: tabular-nums lining-nums;
   font-feature-settings: "tnum" 1, "lnum" 1;
   letter-spacing: -0.02em;
@@ -75,7 +75,7 @@
 
 .ved-loader__pct {
   margin-left: 0.08em;
-  font-size: clamp(4rem, 8vw, 9rem);
+  font-size: clamp(4.4rem, 10vw, 9rem);
   color: rgba(242, 242, 242, 0.55);
 }
 
