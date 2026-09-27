@@ -12,7 +12,7 @@ export type MxdMenuGsapMenuRow = {
   submenu: HTMLUListElement | null;
 };
 
-/** All DOM targets for menu GSAP — supplied via React refs (no `querySelector`). */
+/** All DOM targets for menu GSAP - supplied via React refs (no `querySelector`). */
 export type MxdMenuGsapElements = {
   nav: HTMLElement;
   toggle: HTMLElement;

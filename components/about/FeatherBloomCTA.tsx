@@ -10,7 +10,7 @@ gsap.registerPlugin(ScrollTrigger);
 /*
  * CTA over a blooming fan of feathers (after broadwayplatform.com/about-us):
  * the frame sequence plays once like a video when the section comes into
- * view; after that it's tied to scroll — the feathers fold away as the
+ * view; after that it's tied to scroll - the feathers fold away as the
  * section leaves and open again when you come back.
  */
 
@@ -55,24 +55,54 @@ export default function FeatherBloomCTA() {
       drawn = -1;
       draw();
     };
+    // frames load in the background soon after the page has loaded (not when
+    // the section is almost on screen), a few at a time, every 4th first so a
+    // coarse bloom is available early
+    let ready = 0;
+    let onReady: (() => void) | null = null;
     const load = () => {
       if (loaded) return;
       loaded = true;
-      frames.forEach((_, i) => {
+      const small = window.matchMedia("(max-width: 1024px)").matches;
+      const order = [
+        ...frames.map((_, i) => i).filter((i) => i % 4 === 0),
+        ...frames.map((_, i) => i).filter((i) => i % 4 !== 0),
+      ];
+      let next = 0;
+      const pump = () => {
+        if (next >= order.length) return;
+        const i = order[next++];
         const img = new Image();
         img.decoding = "async";
-        img.src = src(i, window.matchMedia("(max-width: 1024px)").matches);
-        img.decode().then(() => {
-          frames[i] = img;
-          drawn = -1;
-          draw();
-        }).catch(() => {});
-      });
+        img.src = src(i, small);
+        img
+          .decode()
+          .then(() => {
+            frames[i] = img;
+            drawn = -1;
+            draw();
+          })
+          .catch(() => { })
+          .finally(() => {
+            ready++;
+            if (ready >= COUNT * 0.9 && onReady) {
+              const cb = onReady;
+              onReady = null;
+              cb();
+            }
+            pump();
+          });
+      };
+      for (let k = 0; k < 6; k++) pump();
     };
+    const idle = () => window.setTimeout(load, 1200);
+    if (document.readyState === "complete") idle();
+    else window.addEventListener("load", idle, { once: true });
 
     const ctx = gsap.context(() => {
       // fetch frames a screen early
-      ScrollTrigger.create({ trigger: root, start: "top bottom+=100%", once: true, onEnter: load });
+      // safety net: if the section is reached before the idle load kicked in
+      ScrollTrigger.create({ trigger: root, start: "top bottom+=150%", once: true, onEnter: load });
 
       // scroll target once the intro has played: open while the section is
       // in view, folding away as it scrolls off the top
@@ -107,7 +137,10 @@ export default function FeatherBloomCTA() {
         once: true,
         onEnter: () => {
           load();
-          intro.play();
+          // play the bloom once the frames are in, so it runs like a video
+          // instead of stepping through a half-loaded sequence
+          if (ready >= COUNT * 0.9) intro.play();
+          else onReady = () => intro.play();
         },
       });
 
@@ -125,6 +158,8 @@ export default function FeatherBloomCTA() {
     const ro = new ResizeObserver(size);
     ro.observe(canvas);
     return () => {
+      window.removeEventListener("load", idle);
+      onReady = null;
       ro.disconnect();
       ctx.revert();
     };
@@ -147,9 +182,6 @@ export default function FeatherBloomCTA() {
           <Link className="ab-cta__btn" href="/contact">
             Start a project <span aria-hidden="true">→</span>
           </Link>
-          <a className="ab-cta__mail" href="mailto:vedank0522@gmail.com">
-            vedank0522@gmail.com
-          </a>
         </div>
       </div>
       <canvas className="ab-cta__seq" aria-hidden="true" />

@@ -61,7 +61,7 @@ const MilestoneMediaBox = memo(function MilestoneMediaBox({
       if (!v) return;
       if (idx === activeIndex && near) {
         if (v.paused) {
-          void v.play().catch(() => {});
+          void v.play().catch(() => { });
         }
       } else {
         if (!v.paused) {
@@ -78,7 +78,7 @@ const MilestoneMediaBox = memo(function MilestoneMediaBox({
 
     const resumePlayback = () => {
       if (document.visibilityState === "visible" && activeVideo.paused) {
-        void activeVideo.play().catch(() => {});
+        void activeVideo.play().catch(() => { });
       }
     };
 
@@ -107,9 +107,8 @@ const MilestoneMediaBox = memo(function MilestoneMediaBox({
               ref={(el) => {
                 videoRefs.current[idx] = el;
               }}
-              className={`${styles.image} ${
-                isActive ? styles.mediaActive : styles.mediaHidden
-              }`}
+              className={`${styles.image} ${isActive ? styles.mediaActive : styles.mediaHidden
+                }`}
               poster={videoPoster(m.media)}
               muted
               loop
@@ -127,9 +126,8 @@ const MilestoneMediaBox = memo(function MilestoneMediaBox({
         return (
           <Image
             key={m.id}
-            className={`${styles.image} ${
-              isActive ? styles.mediaActive : styles.mediaHidden
-            }`}
+            className={`${styles.image} ${isActive ? styles.mediaActive : styles.mediaHidden
+              }`}
             src={m.media}
             alt={m.title}
             width={600}
@@ -199,7 +197,7 @@ const YearsGrid = memo(function YearsGrid({
             key={m.id}
             onClick={() => onSelectMilestone(i)}
             className={`${styles.yearItem} ${isActive ? styles.activeYear : ""}`}
-            aria-label={`Jump to ${m.year} — ${m.subtitle}`}
+            aria-label={`Jump to ${m.year} - ${m.subtitle}`}
           >
             <span className={styles.yearText}>{m.year}</span>
             <span className={styles.subtitleText}>{m.subtitle}</span>
@@ -332,7 +330,7 @@ export default function ContourTimeline({
       style={{ height: `${milestones.length * vhPerMilestone}vh` }}
     >
       <div ref={pinRef} className={styles.pinned}>
-        {/* Header & Intro Line — revealed by the (un-pinned) wrapper's
+        {/* Header & Intro Line - revealed by the (un-pinned) wrapper's
             position, since the header itself lives inside the pin */}
         <div className={styles.headerArea}>
           <ScrollRevealText

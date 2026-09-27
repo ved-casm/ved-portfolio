@@ -170,7 +170,7 @@ export default function CommonServicesStack({
 
     /**
      * When the stack is in the title reveal band (`start: "top 40%"` on each card) but `onEnter` never
-     * ran (common for `#services` / first paint), lines stay at 100% — this plays `animateContentIn` so
+     * ran (common for `#services` / first paint), lines stay at 100% - this plays `animateContentIn` so
      * the entrance matches the other cards. When a tween is already running or lines are at rest at 0%,
      * it only fixes state on refresh (resize) without re-triggering.
      */
@@ -246,7 +246,7 @@ export default function CommonServicesStack({
         descrSplits.push(SplitText.create(linesDescrEl, { ...splitTextVars }));
       }
 
-      /* main.css .line { translateY(100%) } + mask — ensure GSAP inline values apply cleanly (no leftover -webkit-). */
+      /* main.css .line { translateY(100%) } + mask - ensure GSAP inline values apply cleanly (no leftover -webkit-). */
       titleSplits.forEach((split) => {
         const lines = split.lines;
         if (!lines?.length) return;

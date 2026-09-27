@@ -1,4 +1,4 @@
-/* About page — motion after wonjyou.studio / broadwayplatform.com, in the
+/* About page - motion after wonjyou.studio / broadwayplatform.com, in the
    site's dark theme and fonts. Sizes in rem use the site's 10px root. */
 
 .ab-page {
@@ -810,6 +810,7 @@
   pointer-events: none;
   /* filter: grayscale(0.9) brightness(0.7) contrast(0.9); */
 }
+
 /* small screens: a shorter CTA (~85vh) with a bigger fan filling the gap */
 @media (max-width: 1024px) {
   .ab-cta {

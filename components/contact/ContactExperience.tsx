@@ -23,11 +23,11 @@ const BUILDING = [
   "a product / SaaS interface",
   "a web app or dashboard",
   "an e-commerce store",
-  "not sure — let's talk",
+  "not sure - let's talk",
 ];
 const SOURCES = ["LinkedIn", "GitHub", "WhatsApp", "Referral", "Google search", "Other"];
 const EMAIL = "vedank0522@gmail.com";
-const GLYPHS = "!<>-_\\/[]{}—=+*^?#01";
+const GLYPHS = "!<>-_\\/[]{}-=+*^?#01";
 
 type Phase = "loading" | "gate" | "reveal" | "done";
 
@@ -103,7 +103,7 @@ export default function ContactExperience() {
       .then((g: { currency?: string; rate?: number }) => {
         if (alive && g.currency && g.rate) setBudget(budgetOptions(g.currency, g.rate));
       })
-      .catch(() => {});
+      .catch(() => { });
     return () => {
       alive = false;
     };
@@ -603,7 +603,7 @@ export default function ContactExperience() {
 
             <label className="ct-group ct-field">
               <span className="ct-legend" data-scramble>What I&apos;m picturing...</span>
-              <textarea name="picture" rows={3} placeholder="Goals, references, timeline — anything that helps" />
+              <textarea name="picture" rows={3} placeholder="Goals, references, timeline - anything that helps" />
             </label>
 
             <div role="group" aria-labelledby="ct-l-source" className="ct-group">
