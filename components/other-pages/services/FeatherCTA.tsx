@@ -210,7 +210,15 @@ export default function FeatherCTA() {
     const setFX = gsap.quickSetter(featherEl, "x", "px");
     const setFY = gsap.quickSetter(featherEl, "y", "px");
     const setFR = gsap.quickSetter(featherEl, "rotation", "deg");
-    const setFS = gsap.quickSetter(featherEl, "scale");
+    // "scale" is an alias GSAP expands to "scaleX,scaleY"; quickSetter doesn't
+    // split it, and Safari throws on the resulting attribute name (the page
+    // failed to load on iOS). Two explicit setters instead.
+    const setFSX = gsap.quickSetter(featherEl, "scaleX");
+    const setFSY = gsap.quickSetter(featherEl, "scaleY");
+    const setFS = (v: number) => {
+      setFSX(v);
+      setFSY(v);
+    };
     const setHandX = gsap.quickSetter(handEl, "xPercent");
     const setHandO = gsap.quickSetter(handEl, "opacity");
     const setCopyY = gsap.quickSetter(copyEl, "y", "px");

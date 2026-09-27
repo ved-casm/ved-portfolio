@@ -167,6 +167,8 @@ export default function ContactExperience() {
     }
     return () => {
       document.documentElement.classList.remove("ct-locked");
+      // leaving /contact (or re-running): never leave the site's scroll stopped
+      l?.start();
     };
   }, [phase, lenis]);
 
