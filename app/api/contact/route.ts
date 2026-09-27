@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { ownerEmail, thankYouEmail, type Brief } from "@/lib/contactEmails";
 
 /*
- * POST /api/contact — sends the brief to me and a thank-you to the sender.
+ * POST /api/contact - sends the brief to me and a thank-you to the sender.
  * SMTP settings come from the environment (see .env.example).
  */
 
@@ -49,7 +49,7 @@ export async function POST(req: Request) {
 
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0].trim() || "local";
   if (limited(ip)) {
-    return NextResponse.json({ ok: false, error: "Too many messages — please try again later." }, { status: 429 });
+    return NextResponse.json({ ok: false, error: "Too many messages - please try again later." }, { status: 429 });
   }
 
   const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, CONTACT_TO } = process.env;

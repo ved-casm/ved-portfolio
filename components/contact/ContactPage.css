@@ -1,4 +1,4 @@
-/* /contact — scene + brief form. Root font-size is 10px, so 1rem = 10px. */
+/* /contact - scene + brief form. Root font-size is 10px, so 1rem = 10px. */
 .ct {
   --ct-bg: #0f0f0f;
   --ct-fg: #f2f2f2;
@@ -267,7 +267,7 @@ html.ct-locked body {
   padding: 0.6rem;
 }
 
-.ct-levels > span {
+.ct-levels>span {
   display: flex;
   align-items: flex-end;
   gap: 0.3rem;
@@ -298,7 +298,7 @@ html.ct-locked body {
 
 /* beat the template's `h1 span` colour */
 .ct-title .ct-title__line,
-.ct-title .ct-title__line > span {
+.ct-title .ct-title__line>span {
   color: inherit;
 }
 
@@ -308,7 +308,7 @@ html.ct-locked body {
   padding-bottom: 0.04em;
 }
 
-.ct-title__line > span {
+.ct-title__line>span {
   display: inline-block;
   color: inherit;
 }
@@ -466,11 +466,11 @@ html.ct-locked body {
   transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.3);
 }
 
-.ct-option input:checked + i::after {
+.ct-option input:checked+i::after {
   transform: scale(1);
 }
 
-.ct-option input:focus-visible + i {
+.ct-option input:focus-visible+i {
   outline: 2px solid #fff;
   outline-offset: 3px;
 }
@@ -529,13 +529,13 @@ html.ct-locked body {
   color: #fff;
 }
 
-.ct-pill input:checked + span {
+.ct-pill input:checked+span {
   background: #fff;
   border-color: #fff;
   color: #0f0f0f;
 }
 
-.ct-pill input:focus-visible + span {
+.ct-pill input:focus-visible+span {
   outline: 2px solid #fff;
   outline-offset: 3px;
 }
@@ -621,7 +621,7 @@ html.ct-locked body {
   transition: transform 0.5s cubic-bezier(0.65, 0, 0.35, 1);
 }
 
-.ct-send__roll span + span {
+.ct-send__roll span+span {
   transform: translateY(110%);
 }
 
@@ -629,7 +629,7 @@ html.ct-locked body {
   transform: translateY(-110%);
 }
 
-.ct-send:hover .ct-send__roll span + span {
+.ct-send:hover .ct-send__roll span+span {
   transform: none;
 }
 

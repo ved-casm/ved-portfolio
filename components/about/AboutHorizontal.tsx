@@ -14,10 +14,10 @@ gsap.registerPlugin(ScrollTrigger, SplitText);
 
 /*
  * About page, part 1 (after wonjyou.studio's home intro):
- *   hero — big words that stack in one by one on load, then settle into the
+ *   hero - big words that stack in one by one on load, then settle into the
  *          layout; behind them a scroll-driven photo sequence (head turn)
- *   intro — lines of copy revealed as they slide in
- *   mask  — "MEET VEDANK" as a clip-path over a photo; the letters pan past,
+ *   intro - lines of copy revealed as they slide in
+ *   mask  - "MEET VEDANK" as a clip-path over a photo; the letters pan past,
  *           then the view zooms into the K until the photo fills the screen
  * Desktop (>=1200px): all three sit on one pinned horizontal track.
  * Smaller screens: stacked, with the sequence and the mask pinned vertically.

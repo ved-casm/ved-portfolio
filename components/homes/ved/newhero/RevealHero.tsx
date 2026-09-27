@@ -1471,7 +1471,7 @@ export default function RevealHero({
         <canvas ref={canvasRef} className="w-full h-full block" />
       </div>
 
-      {/* Layer 3: Top-Left brand row — monogram + stance line, on the same
+      {/* Layer 3: Top-Left brand row - monogram + stance line, on the same
           line as the menu button (top-right) */}
       <div className={styles.copy}>
         <Image

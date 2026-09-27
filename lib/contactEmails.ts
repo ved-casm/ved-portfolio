@@ -35,7 +35,7 @@ export function ownerEmail(b: Brief) {
     ["Budget", b.budgetInr && b.budgetInr !== b.budget ? `${b.budget}  (≈ ${b.budgetInr})` : b.budget],
     ["Name", b.name],
     ["Email", b.email],
-    ["Found me through", b.sources.join(", ") || "—"],
+    ["Found me through", b.sources.join(", ") || "-"],
   ];
   const text = [
     `New project brief from ${b.name}`,
@@ -43,7 +43,7 @@ export function ownerEmail(b: Brief) {
     ...rows.map(([k, v]) => `${k}: ${v}`),
     "",
     "What they're picturing:",
-    b.picture || "—",
+    b.picture || "-",
   ].join("\n");
 
   const html = `<!doctype html>
@@ -58,24 +58,24 @@ export function ownerEmail(b: Brief) {
   <tr><td style="padding:12px 32px 8px;">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
       ${rows
-        .map(
-          ([k, v]) => `<tr>
+      .map(
+        ([k, v]) => `<tr>
         <td style="padding:14px 0;border-bottom:1px solid #ececec;width:38%;font:600 11px/1.4 ${MONO};letter-spacing:1px;text-transform:uppercase;color:#8a8a8a;vertical-align:top;">${esc(k)}</td>
         <td style="padding:14px 0;border-bottom:1px solid #ececec;font:500 15px/1.5 ${SANS};color:#111111;">${k === "Email" ? `<a href="mailto:${esc(v)}" style="color:#111111;">${esc(v)}</a>` : esc(v)}</td>
       </tr>`,
-        )
-        .join("")}
+      )
+      .join("")}
     </table>
   </td></tr>
   <tr><td style="padding:18px 32px 32px;">
     <p style="margin:0 0 10px;font:600 11px/1 ${MONO};letter-spacing:1px;text-transform:uppercase;color:#8a8a8a;">What they're picturing</p>
-    <p style="margin:0;font:500 15px/1.6 ${SANS};color:#111111;">${b.picture ? nl2br(b.picture) : "—"}</p>
+    <p style="margin:0;font:500 15px/1.6 ${SANS};color:#111111;">${b.picture ? nl2br(b.picture) : "-"}</p>
     <p style="margin:26px 0 0;"><a href="mailto:${esc(b.email)}?subject=${encodeURIComponent("Re: your project")}" style="display:inline-block;padding:14px 26px;border-radius:99px;background:#0f0f0f;color:#ffffff;text-decoration:none;font:700 12px/1 ${SANS};letter-spacing:1.5px;text-transform:uppercase;">Reply to ${esc(firstName(b.name))}</a></p>
   </td></tr>
 </table>
 </td></tr></table>
 </body></html>`;
-  return { subject: `New project — ${b.name} · ${b.building}`, text, html };
+  return { subject: `New project - ${b.name} · ${b.building}`, text, html };
 }
 
 // ---- to the sender -----------------------------------------------------------
@@ -84,7 +84,7 @@ export function thankYouEmail(b: Brief, opts: { siteUrl?: string; ownerEmail: st
   const logo = opts.siteUrl ? `${opts.siteUrl.replace(/\/$/, "")}/email/monogram-white.png` : "";
   const site = opts.siteUrl || "";
   const steps = [
-    ["01", "I read your brief", "Properly, start to finish — usually the same day."],
+    ["01", "I read your brief", "Properly, start to finish - usually the same day."],
     ["02", "A short call", "20–30 minutes to understand the goals, the audience and the timeline."],
     ["03", "A clear proposal", "Scope, schedule and cost, so you know exactly what you're getting."],
   ];
@@ -126,11 +126,10 @@ export function thankYouEmail(b: Brief, opts: { siteUrl?: string; ownerEmail: st
   <!-- header -->
   <tr><td class="px" style="padding:30px 44px 0;">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
-      <td style="vertical-align:middle;">${
-        logo
-          ? `<img src="${logo}" width="34" height="32" alt="Vedank Gaur" style="display:block;border:0;width:34px;height:auto;">`
-          : `<span style="font:italic 500 26px/1 ${SERIF};color:#ffffff;">V</span>`
-      }</td>
+      <td style="vertical-align:middle;">${logo
+      ? `<img src="${logo}" width="34" height="32" alt="Vedank Gaur" style="display:block;border:0;width:34px;height:auto;">`
+      : `<span style="font:italic 500 26px/1 ${SERIF};color:#ffffff;">V</span>`
+    }</td>
       <td align="right" style="vertical-align:middle;font:500 10px/1 ${MONO};letter-spacing:2px;text-transform:uppercase;color:#6f6f6f;">Brief received</td>
     </tr></table>
   </td></tr>
@@ -142,7 +141,7 @@ export function thankYouEmail(b: Brief, opts: { siteUrl?: string; ownerEmail: st
       <span style="font:italic 500 64px/0.95 ${SERIF};letter-spacing:-1px;text-transform:none;color:#d6d6d6;">Thanks,</span><br>${esc(name)}.
     </h1>
     <p style="margin:26px 0 0;max-width:440px;font:400 16px/1.65 ${SANS};color:#a9a9a9;">
-      Your brief just landed in my inbox. I'll read it properly and get back to you <span style="color:#ffffff;">within 24 hours</span> — usually sooner.
+      Your brief just landed in my inbox. I'll read it properly and get back to you <span style="color:#ffffff;">within 24 hours</span> - usually sooner.
     </p>
   </td></tr>
 
@@ -161,14 +160,13 @@ export function thankYouEmail(b: Brief, opts: { siteUrl?: string; ownerEmail: st
         <p style="margin:0 0 6px;font:500 10px/1 ${MONO};letter-spacing:1.5px;text-transform:uppercase;color:#6f6f6f;">Budget</p>
         <p style="margin:0;font:italic 500 24px/1.2 ${SERIF};color:#ffffff;">${esc(b.budget)}</p>
       </td></tr>
-      ${
-        b.picture
-          ? `<tr><td style="padding:22px 24px;">
+      ${b.picture
+      ? `<tr><td style="padding:22px 24px;">
         <p style="margin:0 0 8px;font:500 10px/1 ${MONO};letter-spacing:1.5px;text-transform:uppercase;color:#6f6f6f;">You're picturing</p>
         <p style="margin:0;font:400 15px/1.6 ${SANS};color:#c9c9c9;">${nl2br(b.picture)}</p>
       </td></tr>`
-          : ""
-      }
+      : ""
+    }
     </table>
   </td></tr>
 
@@ -197,16 +195,14 @@ export function thankYouEmail(b: Brief, opts: { siteUrl?: string; ownerEmail: st
   <!-- cta -->
   <tr><td class="px" style="padding:34px 44px 0;">
     <table role="presentation" cellpadding="0" cellspacing="0"><tr>
-      ${
-        BOOKING_URL
-          ? `<td style="padding-right:12px;"><a href="${esc(BOOKING_URL)}" style="display:inline-block;padding:15px 26px;border-radius:99px;background:#2F5BEA;color:#ffffff;text-decoration:none;font:700 12px/1 ${SANS};letter-spacing:1.5px;text-transform:uppercase;">Book a call &rarr;</a></td>`
-          : ""
-      }
-      ${
-        site
-          ? `<td style="padding-right:12px;"><a href="${esc(site)}/works" style="display:inline-block;padding:15px 26px;border-radius:99px;background:#ffffff;color:#0f0f0f;text-decoration:none;font:700 12px/1 ${SANS};letter-spacing:1.5px;text-transform:uppercase;">See my work &rarr;</a></td>`
-          : ""
-      }
+      ${BOOKING_URL
+      ? `<td style="padding-right:12px;"><a href="${esc(BOOKING_URL)}" style="display:inline-block;padding:15px 26px;border-radius:99px;background:#2F5BEA;color:#ffffff;text-decoration:none;font:700 12px/1 ${SANS};letter-spacing:1.5px;text-transform:uppercase;">Book a call &rarr;</a></td>`
+      : ""
+    }
+      ${site
+      ? `<td style="padding-right:12px;"><a href="${esc(site)}/works" style="display:inline-block;padding:15px 26px;border-radius:99px;background:#ffffff;color:#0f0f0f;text-decoration:none;font:700 12px/1 ${SANS};letter-spacing:1.5px;text-transform:uppercase;">See my work &rarr;</a></td>`
+      : ""
+    }
       <td><a href="mailto:${esc(opts.ownerEmail)}" style="display:inline-block;padding:14px 24px;border-radius:99px;border:1px solid #3a3a3a;color:#f2f2f2;text-decoration:none;font:700 12px/1 ${SANS};letter-spacing:1.5px;text-transform:uppercase;">Add a detail</a></td>
     </tr></table>
   </td></tr>
@@ -222,5 +218,5 @@ export function thankYouEmail(b: Brief, opts: { siteUrl?: string; ownerEmail: st
 </table>
 </td></tr></table>
 </body></html>`;
-  return { subject: `Thanks, ${name} — your brief is in`, text, html };
+  return { subject: `Thanks, ${name} - your brief is in`, text, html };
 }

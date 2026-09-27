@@ -1,4 +1,4 @@
-/* Works index — site dark theme; sizes in px (root font-size is 10px). */
+/* Works index - site dark theme; sizes in px (root font-size is 10px). */
 .wi {
   --wi-bg: #0f0f0f;
   --wi-color: #f2f2f2;
@@ -257,7 +257,9 @@
 }
 
 /* ---- touch / small screens: inline thumbnails, no floater --------------- */
-@media (hover: none), (pointer: coarse), (max-width: 767px) {
+@media (hover: none),
+(pointer: coarse),
+(max-width: 767px) {
   .wi-floater {
     display: none;
   }

@@ -1,14 +1,14 @@
-# Vedank Gaur — portfolio
+# Vedank Gaur - portfolio
 
 Next.js 16 (App Router) site with GSAP, Lenis and three.js.
 
 ## Pages
 
-- `/` — home
+- `/` - home
 - `/services`
-- `/works`, `/works/[slug]` — project data lives in `components/projects/showcase/projectShowcaseData.ts`
+- `/works`, `/works/[slug]` - project data lives in `components/projects/showcase/projectShowcaseData.ts`
 - `/about`
-- `/contact` — 3D scene + project brief form (`app/api/contact/route.ts` sends the emails)
+- `/contact` - 3D scene + project brief form (`app/api/contact/route.ts` sends the emails)
 
 ## Develop
 
