@@ -8,6 +8,7 @@ import { useLenis } from "@/components/common/LenisContext";
 import type { ContactScene } from "./contactScene";
 import type { ContactAudio } from "./contactAudio";
 import { budgetOptions, INR_OPTIONS, type BudgetOption } from "@/lib/budget";
+import { BOOKING_URL } from "@/lib/booking";
 
 /*
  * /contact: an enter gate (with / without sound), a blob reveal into a 3D
@@ -533,6 +534,12 @@ export default function ContactExperience() {
           <br />
           <span data-scramble>I reply within 24 hours.</span>
         </p>
+        {BOOKING_URL && (
+          <a className="ct-book" href={BOOKING_URL} target="_blank" rel="noreferrer" onPointerEnter={hover}>
+            <span className="ct-book__dot" aria-hidden="true" />
+            Rather talk? Book a quick call <span aria-hidden="true">↗</span>
+          </a>
+        )}
 
         {sent ? (
           <div className="ct-sent">
@@ -541,6 +548,12 @@ export default function ContactExperience() {
               Your brief is in. A confirmation is on its way to your inbox, and I&apos;ll get back to you within 24
               hours.
             </p>
+            {BOOKING_URL && (
+              <a className="ct-send ct-send--book" href={BOOKING_URL} target="_blank" rel="noreferrer" onPointerEnter={hover}>
+                <span>Book a call</span>
+                <span className="ct-send__arrow" aria-hidden="true">↗</span>
+              </a>
+            )}
             <button type="button" className="ct-link" onClick={() => setSent(false)}>
               Send another brief
             </button>

@@ -5,6 +5,8 @@
  * Helvetica where a client won't load them.
  */
 
+import { BOOKING_URL } from "@/lib/booking";
+
 export type Brief = {
   building: string;
   budget: string;
@@ -98,6 +100,7 @@ export function thankYouEmail(b: Brief, opts: { siteUrl?: string; ownerEmail: st
     "What happens next:",
     ...steps.map(([n, t, d]) => `${n}. ${t}: ${d}`),
     "",
+    ...(BOOKING_URL ? [`Rather talk sooner? Book a call: ${BOOKING_URL}`, ""] : []),
     "Talk soon,",
     "Vedank Gaur",
     "Web design & development · Jaipur, IN",
@@ -194,6 +197,11 @@ export function thankYouEmail(b: Brief, opts: { siteUrl?: string; ownerEmail: st
   <!-- cta -->
   <tr><td class="px" style="padding:34px 44px 0;">
     <table role="presentation" cellpadding="0" cellspacing="0"><tr>
+      ${
+        BOOKING_URL
+          ? `<td style="padding-right:12px;"><a href="${esc(BOOKING_URL)}" style="display:inline-block;padding:15px 26px;border-radius:99px;background:#2F5BEA;color:#ffffff;text-decoration:none;font:700 12px/1 ${SANS};letter-spacing:1.5px;text-transform:uppercase;">Book a call &rarr;</a></td>`
+          : ""
+      }
       ${
         site
           ? `<td style="padding-right:12px;"><a href="${esc(site)}/works" style="display:inline-block;padding:15px 26px;border-radius:99px;background:#ffffff;color:#0f0f0f;text-decoration:none;font:700 12px/1 ${SANS};letter-spacing:1.5px;text-transform:uppercase;">See my work &rarr;</a></td>`
