@@ -336,7 +336,7 @@ export default function ServicesStackVideo() {
                       ) : (
                         <Image
                           className="card__media"
-                          alt="Project Preview Image"
+                          alt={`${card.titleLines.join(" ")} shown on a device`}
                           src={card.imageSrc}
                           width={card.imageWidth}
                           height={card.imageHeight}

@@ -47,35 +47,77 @@ export default function Loader({ onComplete }: LoaderProps) {
     gsap.set(count, { opacity: 0, yPercent: 18 });
     gsap.set(bar, { scaleX: 0 });
 
-    const counter = { value: 0 };
+    // The counter eases towards a time-based target but may only advance a
+    // small step per frame: if the page stalls (hydration, section setup on a
+    // slow phone), it pauses and carries on smoothly instead of jumping.
+    const DURATION = 2.2; // s, from 0 to 100 at full speed
+    const MAX_PER_SEC = 95; // cap on how fast the number may climb
     let shown = -1;
+    let value = 0;
+    let t = 0;
+    let raf = 0;
+    let last = 0;
+    let started = false;
+    const easeInOut = (x: number) => (x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2);
     const write = () => {
-      const v = Math.round(counter.value);
+      const v = Math.round(value);
       if (v !== shown) {
         shown = v;
         countText.textContent = String(v);
       }
-      bar.style.transform = `scaleX(${counter.value / 100})`;
+      bar.style.transform = `scaleX(${value / 100})`;
     };
     write();
 
-    const tl = gsap.timeline({
-      onComplete: () => {
-        gsap.set(loader, { display: "none" });
-        loaderDone = true;
-        onCompleteRef.current?.();
-      },
-    });
+    const outro = () => {
+      gsap
+        .timeline({
+          onComplete: () => {
+            gsap.set(loader, { display: "none" });
+            loaderDone = true;
+            onCompleteRef.current?.();
+          },
+        })
+        .to([top, count], { opacity: 0, duration: 0.45, ease: "power2.in" }, 0.15)
+        .to(count, { yPercent: -14, duration: 0.45, ease: "power2.in" }, "<");
+    };
+    const frame = (now: number) => {
+      // at most a 30fps step, so a long stall never turns into a jump
+      const dt = last ? Math.min((now - last) / 1000, 1 / 30) : 0;
+      last = now;
+      t += dt;
+      const target = 100 * easeInOut(Math.min(1, t / DURATION));
+      value = Math.min(target, value + MAX_PER_SEC * dt);
+      write();
+      if (value >= 99.999) {
+        value = 100;
+        write();
+        outro();
+        return;
+      }
+      raf = requestAnimationFrame(frame);
+    };
+    const startCounting = () => {
+      if (started) return;
+      started = true;
+      raf = requestAnimationFrame(frame);
+    };
 
-    tl.to(top, { opacity: 1, duration: 0.5, ease: "power2.out" }, 0)
-      .to(count, { opacity: 1, yPercent: 0, duration: 0.8, ease: "expo.out" }, 0.05)
-      // one long, soft ease: it speeds up gently, glides, and settles on 100
-      .to(counter, { value: 100, duration: 2.2, ease: "power2.inOut", onUpdate: write }, 0.15)
-      .to([top, count], { opacity: 0, duration: 0.45, ease: "power2.in" }, "+=0.15")
-      .to(count, { yPercent: -14, duration: 0.45, ease: "power2.in" }, "<");
+    gsap
+      .timeline()
+      .to(top, { opacity: 1, duration: 0.5, ease: "power2.out" }, 0)
+      .to(count, { opacity: 1, yPercent: 0, duration: 0.8, ease: "expo.out" }, 0.05);
+    // count once the heavy first-load work (hydration, section setup) is done,
+    // with a fallback so it never waits too long
+    const whenLoaded = () => requestAnimationFrame(() => requestAnimationFrame(startCounting));
+    if (document.readyState === "complete") whenLoaded();
+    else window.addEventListener("load", whenLoaded, { once: true });
+    const fallback = window.setTimeout(startCounting, 2500);
 
     return () => {
-      tl.kill();
+      cancelAnimationFrame(raf);
+      window.clearTimeout(fallback);
+      window.removeEventListener("load", whenLoaded);
     };
   }, []);
 
