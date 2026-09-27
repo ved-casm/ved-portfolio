@@ -56,9 +56,7 @@ export default function Footer1() {
                       <TextScramble className="mxd-scramble">
                         VEDANK
                       </TextScramble>
-                      <TextScramble className="mxd-scramble">
-                        GAUR
-                      </TextScramble>
+                      <TextScramble className="mxd-scramble">GAUR</TextScramble>
                     </div>
                   </Link>
                 </CommonScrollAnimated>
@@ -69,9 +67,7 @@ export default function Footer1() {
                     animation="splitLinesReverse"
                   >
                     Web Designer & UI/UX Designer &nbsp;
-                    <span>
-                      in Jaipur
-                    </span>
+                    <span>in Jaipur</span>
                   </CommonAnimatedText>
                 </div>
                 <CommonScrollAnimated
@@ -79,9 +75,9 @@ export default function Footer1() {
                   as="div"
                   animation="inUp"
                 >
-                  <SmoothAnchorLink
+                  <Link
                     className="btn btn-default-icon-small btn-default-fullwidth-mobile btn-default-outline slide-right-up"
-                    targetId="demo"
+                    href="/contact"
                   >
                     <TextScramble className="btn-caption mxd-scramble">
                       Contact Me
@@ -96,7 +92,7 @@ export default function Footer1() {
                         <path d="M18,0v14.4h-3.6v-7.2h-3.6v-3.6H3.6V0h14.4ZM7.2,10.8h3.6v-3.6h-3.6s0,3.6,0,3.6ZM3.6,14.4h3.6v-3.6h-3.6v3.6ZM0,18h3.6v-3.6H0v3.6Z" />
                       </svg>
                     </i>
-                  </SmoothAnchorLink>
+                  </Link>
                 </CommonScrollAnimated>
               </div>
               <div className="col-12 col-xxl-8 mxd-demo-footer__item">
@@ -123,7 +119,13 @@ export default function Footer1() {
                                 </CommonScrollAnimated>
                               </div>
                               <div className="mxd-footer-nav02__list">
-                                <ul style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+                                <ul
+                                  style={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    gap: "0.8rem",
+                                  }}
+                                >
                                   {block.links.map((link) => (
                                     <li key={`${block.title}-${link.href}`}>
                                       <CommonScrollAnimatedLink
@@ -131,7 +133,8 @@ export default function Footer1() {
                                         href={link.href}
                                         animation="slideDownLine"
                                         style={{
-                                          fontSize: "clamp(2.2rem, 3.2vw, 3.8rem)",
+                                          fontSize:
+                                            "clamp(2.2rem, 3.2vw, 3.8rem)",
                                           fontWeight: 700,
                                           lineHeight: 1.2,
                                           letterSpacing: "-0.02em",
@@ -186,18 +189,17 @@ export default function Footer1() {
             >
               <Image
                 className="mxd-move-slow"
-                alt="Azurio Footer Decoration Image"
+                alt=""
                 src="/img/demo/planet-01.avif"
                 width={400}
                 height={404}
               />
             </CommonScrollAnimated>
             <div className="fw-mark__wrap">
-              <a
+              <Link
                 className="fw-mark__content small justify-content-center"
-                href="https://themeforest.net/user/ib-themes"
-                aria-label="IB Themes Portfolio"
-                target="_blank"
+                href="/"
+                aria-label="Vedank Gaur, home"
               >
                 <CommonAnimatedText
                   as="span"
@@ -206,7 +208,7 @@ export default function Footer1() {
                 >
                   VEDANK
                 </CommonAnimatedText>
-              </a>
+              </Link>
             </div>
             <CommonScrollAnimated
               className="mxd-footer__planet02 anim-uni-in-up"
@@ -215,7 +217,7 @@ export default function Footer1() {
             >
               <Image
                 className="mxd-move"
-                alt="Azurio Footer Decoration Image"
+                alt=""
                 src="/img/demo/planet-02.avif"
                 width={250}
                 height={255}
@@ -268,14 +270,11 @@ export default function Footer1() {
                           <p className="footer-data bright">
                             <span>
                               Made with ❤️ by&nbsp;
-                              <a
-                                href="https://themeforest.net/user/ib-themes"
-                                target="_blank"
-                              >
+                              <Link href="/">
                                 <TextScramble className="mxd-scramble">
                                   VED
                                 </TextScramble>
-                              </a>
+                              </Link>
                             </span>
                           </p>
                         </CommonScrollAnimated>

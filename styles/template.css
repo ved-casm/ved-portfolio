@@ -47,3 +47,61 @@
 .no-touch .mxd-menu .main-menu__item.main-menu__item--current .main-menu__toggle:hover svg {
   fill: var(--accent);
 }
+
+/* ---- first-load loader: big Cormorant italic counter -------------------- */
+.ved-loader__count {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  color: #f2f2f2;
+  font-family: var(--font-cormorant), "Cormorant", serif;
+  font-style: italic;
+  font-weight: 500;
+  line-height: 0.8;
+  will-change: transform, opacity;
+}
+
+.ved-loader__num {
+  display: inline-block;
+  /* 3 digits of tabular figures, right-aligned: nothing shifts as it counts */
+  min-width: 3ch;
+  text-align: right;
+  font-size: clamp(9rem, 22vw, 26rem);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: "tnum" 1, "lnum" 1;
+  letter-spacing: -0.02em;
+}
+
+.ved-loader__pct {
+  margin-left: 0.08em;
+  font-size: clamp(4rem, 8vw, 9rem);
+  color: rgba(242, 242, 242, 0.55);
+}
+
+.ved-loader__line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2.4rem;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+}
+
+.ved-loader__bar {
+  position: absolute;
+  inset: 0;
+  background: #f2f2f2;
+  transform-origin: left center;
+  transform: scaleX(0);
+  will-change: transform;
+}
+
+.ved-loader__sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}

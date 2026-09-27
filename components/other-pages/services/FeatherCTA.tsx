@@ -8,6 +8,7 @@ import styles from "./FeatherCTA.module.css";
 import { CommonLoadFade } from "@/components/animations/CommonLoadAnimation";
 import SmoothAnchorLink from "@/components/common/SmoothAnchorLink";
 import TextScramble from "@/components/animations/TextScramble";
+import { onWidthResize } from "@/lib/widthResize";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -123,6 +124,11 @@ export default function FeatherCTA() {
     if (!fctx) return;
 
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // phones: half the frames and a capped canvas resolution; iOS Safari kills
+    // tabs that hold too much decoded image / canvas memory
+    const touch = window.matchMedia("(pointer: coarse)").matches;
+    const FRAMES = touch ? FRAME_NUMBERS.filter((_, i) => i % 2 === 0 || i === FRAME_NUMBERS.length - 1) : FRAME_NUMBERS;
+    const DPR_CAP = touch ? 1.5 : 2;
 
     // ---- layout -----------------------------------------------------------
     const m = { w: 0, h: 0, base: 0, dpr: 1, portrait: false, keys: [] as Key[], lift: 0 };
@@ -131,7 +137,7 @@ export default function FeatherCTA() {
       m.h = window.innerHeight;
       m.portrait = m.w / m.h < 0.9;
       m.base = m.portrait ? Math.min(m.w * 0.62, m.h * 0.42) : Math.min(m.w * 0.36, m.h * 0.62);
-      m.dpr = Math.min(window.devicePixelRatio || 1, 2);
+      m.dpr = Math.min(window.devicePixelRatio || 1, DPR_CAP);
       const size = Math.round(m.base * m.dpr);
       if (featherEl.width !== size) {
         featherEl.width = size;
@@ -152,7 +158,7 @@ export default function FeatherCTA() {
     };
 
     // ---- frames -----------------------------------------------------------
-    const frames: (HTMLImageElement | null)[] = FRAME_NUMBERS.map(() => null);
+    const frames: (HTMLImageElement | null)[] = FRAMES.map(() => null);
     let lastDrawn = -1;
     let loadStarted = false;
     const loadFrames = () => {
@@ -160,13 +166,13 @@ export default function FeatherCTA() {
       loadStarted = true;
       // coarse pass first (every 4th) so scrubbing works early, then the rest
       const order = [
-        ...FRAME_NUMBERS.map((_, i) => i).filter((i) => i % 4 === 0),
-        ...FRAME_NUMBERS.map((_, i) => i).filter((i) => i % 4 !== 0),
+        ...FRAMES.map((_, i) => i).filter((i) => i % 4 === 0),
+        ...FRAMES.map((_, i) => i).filter((i) => i % 4 !== 0),
       ];
       order.forEach((i) => {
         const img = new Image();
         img.decoding = "async";
-        img.src = frameSrc(FRAME_NUMBERS[i]);
+        img.src = frameSrc(FRAMES[i]);
         img
           .decode()
           .then(() => {
@@ -179,7 +185,7 @@ export default function FeatherCTA() {
     const nearestLoaded = (target: number) => {
       let best = -1;
       let bestD = Infinity;
-      FRAME_NUMBERS.forEach((n, i) => {
+      FRAMES.forEach((n, i) => {
         if (!frames[i]) return;
         const d = Math.abs(n - target);
         if (d < bestD) {
@@ -452,14 +458,14 @@ export default function FeatherCTA() {
       dust?.resize();
       lastDrawn = -1;
     };
-    window.addEventListener("resize", onResize);
+    const stopResize = onWidthResize(onResize);
 
     return () => {
       disposed = true;
       stop();
       near.disconnect();
       onScreen.disconnect();
-      window.removeEventListener("resize", onResize);
+      stopResize();
       driver.kill();
       ScrollTrigger.getAll().forEach((t) => {
         if (t.trigger === root) t.kill();

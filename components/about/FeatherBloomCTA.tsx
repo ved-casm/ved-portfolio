@@ -15,7 +15,9 @@ gsap.registerPlugin(ScrollTrigger);
  */
 
 const COUNT = 76;
-const src = (i: number) => `/img/feather-background/fc-${String(i + 1).padStart(5, "0")}.avif`;
+// phones get a 768px-wide set (a quarter of the decoded memory; iOS Safari is strict)
+const src = (i: number, small: boolean) =>
+  `/img/feather-background/${small ? "m/" : ""}fc-${String(i + 1).padStart(5, "0")}.avif`;
 const INTRO_SECONDS = 3.2;
 
 export default function FeatherBloomCTA() {
@@ -59,7 +61,7 @@ export default function FeatherBloomCTA() {
       frames.forEach((_, i) => {
         const img = new Image();
         img.decoding = "async";
-        img.src = src(i);
+        img.src = src(i, window.matchMedia("(max-width: 1024px)").matches);
         img.decode().then(() => {
           frames[i] = img;
           drawn = -1;
