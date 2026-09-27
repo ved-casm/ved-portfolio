@@ -3,6 +3,7 @@
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText.js";
+import { onWidthResize } from "@/lib/widthResize";
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
@@ -275,10 +276,10 @@ export function initStackCardsEffects(refs: StackCardsRefs): () => void {
     updateClip(lastProgress);
     ScrollTrigger.refresh();
   };
-  window.addEventListener("resize", onResize);
+  const stopResize = onWidthResize(onResize);
 
     return () => {
-      window.removeEventListener("resize", onResize);
+      stopResize();
       triggers.forEach((t) => t.kill());
       splitInstances.forEach((s) => s.revert());
     };

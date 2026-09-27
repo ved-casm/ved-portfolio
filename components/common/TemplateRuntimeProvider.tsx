@@ -24,6 +24,7 @@ import Loader from "@/components/common/Loader";
 import { markPageRevealed } from "@/lib/pageReveal";
 import { startLazyVideos } from "@/lib/lazyVideo";
 import { coalesceScrollTriggerRefresh } from "@/lib/scrollRefresh";
+import { onWidthResize } from "@/lib/widthResize";
 
 gsap.registerPlugin(ScrollTrigger, CustomEase);
 CustomEase.create("hop", ".87, 0, .13, 1");
@@ -129,8 +130,10 @@ export default function TemplateRuntimeProvider({
 
     void document.fonts.ready.then(() => ScrollTrigger.refresh());
 
-    const onResize = () => ScrollTrigger.refresh();
-    window.addEventListener("resize", onResize);
+    // width changes only: iOS/Android address-bar height changes must not
+    // re-measure every pin mid-scroll
+    ScrollTrigger.config({ ignoreMobileResize: true });
+    const stopResize = onWidthResize(() => ScrollTrigger.refresh());
 
     const onPageShow = (event: PageTransitionEvent) => {
       const navEntry = performance.getEntriesByType("navigation")[0] as
@@ -150,7 +153,7 @@ export default function TemplateRuntimeProvider({
       if (transitionEl) gsap.killTweensOf(transitionEl);
       cancelAnimationFrame(lenisStateRafId);
       cancelAnimationFrame(rafId);
-      window.removeEventListener("resize", onResize);
+      stopResize();
       window.removeEventListener("pageshow", onPageShow);
       window.history.scrollRestoration = prevScrollRestoration;
       stopLazyVideos();

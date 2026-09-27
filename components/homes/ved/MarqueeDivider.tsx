@@ -18,14 +18,15 @@ const MARQUEE_TEXTS = [
   "ACETERNITY UI",
 ];
 
+// hover-capsule images: shots of the projects
 const LOADER_IMAGES = [
-  "/img/loa_01.avif",
-  "/img/loa_02.avif",
-  "/img/loa_03.avif",
-  "/img/loa_04.avif",
-  "/img/loa_05.avif",
-  "/img/loa_06.avif",
-  "/img/loa_07.avif",
+  "/img/projects/athlnk/01.avif",
+  "/img/projects/foreward-golf/01.avif",
+  "/img/projects/clear-place/01.avif",
+  "/img/projects/greenfrog-cleaning/01.avif",
+  "/img/projects/ascension-healthcare/01.avif",
+  "/img/projects/athlnk/05.avif",
+  "/img/projects/foreward-golf/04.avif",
 ];
 
 interface FlowingMarqueeRowProps {
