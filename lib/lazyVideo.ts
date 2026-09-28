@@ -79,3 +79,12 @@ export function startLazyVideos(): () => void {
     document.removeEventListener("visibilitychange", onVis);
   };
 }
+
+/** AthLnk showreel: AV1 WebM where it decodes, H.264 MP4 everywhere else. */
+export const ATHLNK_REEL = {
+  poster: "/video/projects/athlnk-reel-poster.avif",
+  sources: [
+    { type: 'video/webm; codecs="av01.0.08M.08"', src: "/video/projects/athlnk-reel.webm" },
+    { type: "video/mp4", src: "/video/projects/athlnk-reel.mp4" },
+  ],
+};
