@@ -6,7 +6,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Fragment, useLayoutEffect, useRef } from "react";
 import TextScramble from "@/components/animations/TextScramble";
-import { videoPoster, videoSources } from "@/lib/lazyVideo";
 import {
   initStackCardsEffects,
   initVelocityMarqueeRows,
@@ -58,8 +57,12 @@ const WEB_STUDIO_SERVICE_CARDS: WebStudioServiceCard[] = [
     rightTags: ["Aceternity UI", "Logo design", "Motion", "Hero UI"],
     titleLines: ["AthLnk", "Platform"],
     media: "video",
-    poster: videoPoster("/showcase.mp4"),
-    sources: videoSources("/showcase.mp4"),
+    // AV1 WebM (760 KB) where it decodes, H.264 MP4 (1.1 MB) everywhere else
+    poster: "/video/projects/athlnk-reel-poster.avif",
+    sources: [
+      { type: 'video/webm; codecs="av01.0.08M.08"', src: "/video/projects/athlnk-reel.webm" },
+      { type: "video/mp4", src: "/video/projects/athlnk-reel.mp4" },
+    ],
   },
   {
     key: "foreward",
