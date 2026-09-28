@@ -3,6 +3,7 @@
 import AutoplayLoopVideo from "@/components/media/AutoplayLoopVideo";
 import Image from "next/image";
 import Link from "next/link";
+import { ATHLNK_REEL } from "@/lib/lazyVideo";
 import { useRouter } from "next/navigation";
 import { Fragment, useLayoutEffect, useRef } from "react";
 import TextScramble from "@/components/animations/TextScramble";
@@ -57,12 +58,8 @@ const WEB_STUDIO_SERVICE_CARDS: WebStudioServiceCard[] = [
     rightTags: ["Aceternity UI", "Logo design", "Motion", "Hero UI"],
     titleLines: ["AthLnk", "Platform"],
     media: "video",
-    // AV1 WebM (760 KB) where it decodes, H.264 MP4 (1.1 MB) everywhere else
-    poster: "/video/projects/athlnk-reel-poster.avif",
-    sources: [
-      { type: 'video/webm; codecs="av01.0.08M.08"', src: "/video/projects/athlnk-reel.webm" },
-      { type: "video/mp4", src: "/video/projects/athlnk-reel.mp4" },
-    ],
+    poster: ATHLNK_REEL.poster,
+    sources: ATHLNK_REEL.sources,
   },
   {
     key: "foreward",

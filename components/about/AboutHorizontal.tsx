@@ -8,7 +8,7 @@ import { SplitText } from "gsap/SplitText";
 import { useLenis } from "@/components/common/LenisContext";
 import { onPageRevealed } from "@/lib/pageReveal";
 import AutoplayLoopVideo from "@/components/media/AutoplayLoopVideo";
-import { videoPoster, videoSources } from "@/lib/lazyVideo";
+import { ATHLNK_REEL } from "@/lib/lazyVideo";
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
@@ -502,7 +502,7 @@ export default function AboutHorizontal() {
             <div className="ab-intro__bot">
               <div className="ab-intro__media">
                 <div className="ab-intro__video">
-                  <AutoplayLoopVideo sources={videoSources("/showcase.mp4")} poster={videoPoster("/showcase.mp4")} />
+                  <AutoplayLoopVideo sources={ATHLNK_REEL.sources} poster={ATHLNK_REEL.poster} />
                 </div>
                 <div className="ab-intro__mediaText">
                   <span className="ab-intro__mediaLabel">showreel</span>

@@ -6,7 +6,7 @@ import Link from "next/link";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import AutoplayLoopVideo from "@/components/media/AutoplayLoopVideo";
-import { videoPoster, videoSources } from "@/lib/lazyVideo";
+import { ATHLNK_REEL } from "@/lib/lazyVideo";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -30,10 +30,10 @@ const LINES = [
 ];
 
 const MEDIA: { src: string; video?: boolean }[] = [
-  { src: "/showcase.mp4", video: true },
+  { src: "athlnk-reel", video: true },
   { src: "/img/about/vedank-portrait.avif" },
   { src: "/img/projects/clear-place/05.avif" },
-  { src: "/showcase1.mp4", video: true },
+  { src: "athlnk-reel-2", video: true },
   { src: "/img/projects/foreward-golf/08.avif" },
 ];
 // parallax travel per image (yPercent start -> end)
@@ -122,7 +122,7 @@ export default function AboutStatement() {
         {MEDIA.map((m, i) => (
           <div key={m.src + i} className={`ab-st__media ab-st__media--${i}`}>
             {m.video ? (
-              <AutoplayLoopVideo sources={videoSources(m.src)} poster={videoPoster(m.src)} />
+              <AutoplayLoopVideo sources={ATHLNK_REEL.sources} poster={ATHLNK_REEL.poster} />
             ) : (
               <img src={m.src} alt="" loading="lazy" />
             )}
