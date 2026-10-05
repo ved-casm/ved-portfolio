@@ -66,10 +66,10 @@ export const metadata: Metadata = {
     title: "Vedank Gaur | Frontend & UI/UX Designer",
     description: DESCRIPTION,
   },
-  // Google Search Console "HTML tag" check: set GOOGLE_SITE_VERIFICATION on Vercel
-  verification: process.env.GOOGLE_SITE_VERIFICATION
-    ? { google: process.env.GOOGLE_SITE_VERIFICATION }
-    : undefined,
+  // Google Search Console "HTML tag" check (public token; an env var overrides it)
+  verification: {
+    google: process.env.GOOGLE_SITE_VERIFICATION || "mtBqz9zNAWf0bnDelWK2Y9s2YbCiuEU7zBoVWvOZWVc",
+  },
 };
 
 export default async function RootLayout({
