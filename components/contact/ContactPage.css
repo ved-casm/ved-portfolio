@@ -902,6 +902,20 @@ html.ct-locked body {
   border-bottom-color: #fff;
 }
 
+/* "Book a call" and "Download my resume" side by side, wrapping on phones */
+.ct-book + .ct-book {
+  margin-left: 2.4rem;
+}
+
+@media (max-width: 575px) {
+  .ct-book + .ct-book {
+    display: flex;
+    width: fit-content;
+    margin-left: 0;
+    margin-top: 1.6rem;
+  }
+}
+
 .ct-book__dot {
   width: 0.8rem;
   height: 0.8rem;

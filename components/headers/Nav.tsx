@@ -9,6 +9,7 @@ import AutoplayLoopVideo from "@/components/media/AutoplayLoopVideo";
 import { videoSources } from "@/lib/lazyVideo";
 import { useMxdMenuGsap, useMxdMenuGsapRefs } from "@/hooks/useMxdMenuGsap";
 import TextScramble from "@/components/animations/TextScramble";
+import { RESUME_FILE, RESUME_URL } from "@/lib/resume";
 
 function normalizePath(p: string): string {
   if (!p) return "/";
@@ -88,9 +89,9 @@ export default function Nav({
 
   const headerSlots = useMemo(() => makeSlotters(g.headerSplitTargets, 3), [g]);
   const mainSlots = useMemo(() => makeSlotters(g.mainMenuLinkSpans, 10), [g]);
-  const contactSlots = useMemo(() => makeSlotters(g.contactAnchors, 7), [g]);
+  const contactSlots = useMemo(() => makeSlotters(g.contactAnchors, 8), [g]);
   const contactRevealSlots = useMemo(
-    () => makeSlotters(g.contactRevealTargets, 7),
+    () => makeSlotters(g.contactRevealTargets, 8),
     [g],
   );
   const footerSlots = useMemo(() => makeSlotters(g.footerSplitTargets, 4), [g]);
@@ -406,6 +407,21 @@ export default function Nav({
                             className="mxd-scramble"
                           >
                             Email
+                          </TextScramble>
+                        </a>
+                      </li>
+                      <li>
+                        <a
+                          ref={contactSlots[7]}
+                          className="tag tag-m"
+                          href={RESUME_URL}
+                          download={RESUME_FILE}
+                        >
+                          <TextScramble
+                            ref={contactRevealSlots[7]}
+                            className="mxd-scramble"
+                          >
+                            Resume
                           </TextScramble>
                         </a>
                       </li>

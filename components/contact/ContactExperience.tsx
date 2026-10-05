@@ -9,6 +9,7 @@ import type { ContactScene } from "./contactScene";
 import type { ContactAudio } from "./contactAudio";
 import { budgetOptions, INR_OPTIONS, type BudgetOption } from "@/lib/budget";
 import { BOOKING_URL } from "@/lib/booking";
+import { RESUME_FILE, RESUME_URL } from "@/lib/resume";
 
 /*
  * /contact: an enter gate (with / without sound), a blob reveal into a 3D
@@ -542,6 +543,9 @@ export default function ContactExperience() {
             Rather talk? Book a quick call <span aria-hidden="true">↗</span>
           </a>
         )}
+        <a className="ct-book" href={RESUME_URL} download={RESUME_FILE} onPointerEnter={hover}>
+          Prefer a CV? Download my resume <span aria-hidden="true">↓</span>
+        </a>
 
         {sent ? (
           <div className="ct-sent">

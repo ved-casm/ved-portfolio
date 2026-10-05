@@ -6,3 +6,13 @@
     margin-top: -45vh;
     padding-bottom: 35vh;
 }
+
+/* main.css sets this caption with `font: normal 700 3.6rem/1.2;` (no family),
+   which browsers drop, so phones got the 1.6rem paragraph size. Give phones
+   the 3.6rem the template meant; 768px+ keep main.css's 5rem / 7rem. */
+@media only screen and (max-width: 767px) {
+  .mxd-dv-sticky-cap .mxd-dv-sticky-cap__text {
+    font-size: 3.6rem;
+    line-height: 1.2;
+  }
+}
