@@ -14,7 +14,11 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params;
   const project = getProject(slug);
   if (!project) return {};
-  return { title: project.seoTitle, description: project.seoDescription };
+  return {
+    title: project.seoTitle,
+    description: project.seoDescription,
+    alternates: { canonical: `/works/${slug}` },
+  };
 }
 
 export default async function ProjectPage({ params }: Params) {

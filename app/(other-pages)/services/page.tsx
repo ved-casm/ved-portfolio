@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: "Services | Vedank Gaur",
   description:
     "Web design, UI/UX, landing pages, e-commerce and virtual assistance by Vedank Gaur, a web designer and frontend developer in Jaipur.",
+  alternates: { canonical: "/services" },
 };
 export default function ServicesPage() {
   return (
