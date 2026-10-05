@@ -2,8 +2,6 @@
 
 import type { ReactNode } from "react";
 import TextScramble from "@/components/animations/TextScramble";
-import AutoplayLoopVideo from "@/components/media/AutoplayLoopVideo";
-import { videoPoster, videoSources } from "@/lib/lazyVideo";
 import CommonServicesStack, {
   ServicesStackSlot,
 } from "@/components/animations/CommonServicesStack";
@@ -166,9 +164,13 @@ function ServiceCard({ card, index }: { card: Card; index: number }) {
             </div>
             <ServicesStackSlot part="image" index={index}>
               <div className="services-card__image">
-                <AutoplayLoopVideo
-                  sources={videoSources(card.video)}
-                  poster={videoPoster(card.video)}
+                <video
+                  src={card.video}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
                   aria-label={card.title}
                 />
                 <div className="services-card__cover" />
