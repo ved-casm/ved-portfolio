@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: "About | Vedank Gaur",
   description:
     "Vedank Gaur, web designer and frontend developer in Jaipur, designing and building websites from the first sketch to launch.",
+  alternates: { canonical: "/about" },
 };
 
 export default function AboutPage() {
