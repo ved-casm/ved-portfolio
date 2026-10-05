@@ -3,6 +3,7 @@ import CommonAnimatedText from "@/components/animations/CommonAnimatedText";
 import Link from "next/link";
 import Image from "next/image";
 import TextScramble from "@/components/animations/TextScramble";
+import { RESUME_FILE, RESUME_URL } from "@/lib/resume";
 import FooterBackToTop from "@/components/footers/FooterBackToTop";
 import {
   CommonScrollAnimated,
@@ -93,6 +94,26 @@ export default function Footer1() {
                       </svg>
                     </i>
                   </Link>
+                  <a
+                    className="btn btn-default-icon-small btn-default-fullwidth-mobile btn-default-outline slide-right-up"
+                    href={RESUME_URL}
+                    download={RESUME_FILE}
+                  >
+                    <TextScramble className="btn-caption mxd-scramble">
+                      Download Resume
+                    </TextScramble>
+                    <i className="btn-icon">
+                      {/* the same arrow, turned to point down-right */}
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        version="1.1"
+                        viewBox="0 0 18 18"
+                        style={{ transform: "rotate(90deg)" }}
+                      >
+                        <path d="M18,0v14.4h-3.6v-7.2h-3.6v-3.6H3.6V0h14.4ZM7.2,10.8h3.6v-3.6h-3.6s0,3.6,0,3.6ZM3.6,14.4h3.6v-3.6h-3.6v3.6ZM0,18h3.6v-3.6H0v3.6Z" />
+                      </svg>
+                    </i>
+                  </a>
                 </CommonScrollAnimated>
               </div>
               <div className="col-12 col-xxl-8 mxd-demo-footer__item">

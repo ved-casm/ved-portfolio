@@ -111,3 +111,110 @@
   overflow: hidden;
   clip: rect(0 0 0 0);
 }
+
+/* Home footer: "Contact Me" + "Download Resume" share one line at every
+   width (main.css stacks them full width below 576px), each caption on a
+   single line. */
+.mxd-demo-footer__btn {
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 1rem;
+}
+
+.mxd-demo-footer__btn .btn-caption {
+  white-space: nowrap;
+}
+
+/* below desktop the two buttons sit in a narrower column: slightly tighter */
+@media only screen and (max-width: 1399px) {
+  .mxd-demo-footer__btn {
+    gap: 0.8rem;
+  }
+
+  .mxd-demo-footer__btn > .btn {
+    flex: 0 1 auto;
+    width: auto;
+    gap: 0.8rem;
+    padding-left: 1rem;
+    font-size: 1.4rem;
+    letter-spacing: 0;
+  }
+}
+
+@media only screen and (max-width: 399px) {
+  .mxd-demo-footer__btn > .btn {
+    font-size: 1.2rem;
+  }
+}
+
+/* Short screens below desktop: the footer opens within ~95vh, so trim the
+   template gaps there only (tall phones and desktops keep them). */
+@media only screen and (max-width: 1399px) and (max-height: 950px) {
+  .mxd-demo-footer__btn {
+    margin-bottom: 3.6rem;
+  }
+
+  .mxd-demo-footer__nav {
+    margin-bottom: 2.4rem;
+  }
+
+  .mxd-demo-footer-nav__block {
+    gap: 1.6rem;
+    margin-bottom: 3.6rem;
+  }
+
+  .mxd-footer__controls-middle.controls-landing {
+    margin-top: 4.4rem;
+  }
+}
+
+/* Short phones: "/ Navigation" and "/ Quick Links" side by side as well */
+@media only screen and (max-width: 767px) and (max-height: 880px) {
+  .mxd-demo-footer__nav .row > div {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+}
+
+/* Very short phones (iPhone SE class): a bit tighter still */
+@media only screen and (max-width: 767px) and (max-height: 700px) {
+  .mxd-demo-footer__logo {
+    margin-bottom: 1.6rem;
+  }
+
+  .mxd-demo-footer__slogan {
+    margin-bottom: 2rem;
+  }
+
+  .mxd-demo-footer__btn {
+    margin-bottom: 2.4rem;
+  }
+
+  .mxd-demo-footer__nav {
+    margin-bottom: 1.6rem;
+  }
+
+  .mxd-footer__controls-middle.controls-landing {
+    margin-top: 2.8rem;
+    margin-bottom: 1.8rem;
+  }
+
+  .mxd-demo-footer .mxd-footer__data {
+    padding-top: 1.6rem;
+    padding-bottom: 1.6rem;
+  }
+}
+
+/* Laptops (992-1399px): logo/slogan/buttons beside the nav, as on desktop
+   (the purged grid has no col-lg-* / col-xl-5, so the split is set here). */
+@media only screen and (min-width: 992px) and (max-width: 1399px) {
+  .mxd-demo-footer .mxd-block .row > .mxd-demo-footer__item:first-child {
+    flex: 0 0 45%;
+    max-width: 45%;
+  }
+
+  .mxd-demo-footer .mxd-block .row > .mxd-demo-footer__item:last-child {
+    flex: 0 0 55%;
+    max-width: 55%;
+  }
+}

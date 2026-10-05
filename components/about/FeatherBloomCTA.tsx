@@ -4,6 +4,7 @@ import { useLayoutEffect, useRef } from "react";
 import Link from "next/link";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { RESUME_FILE, RESUME_URL } from "@/lib/resume";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -182,6 +183,9 @@ export default function FeatherBloomCTA() {
           <Link className="ab-cta__btn" href="/contact">
             Start a project <span aria-hidden="true">→</span>
           </Link>
+          <a className="ab-cta__btn" href={RESUME_URL} download={RESUME_FILE}>
+            Download resume <span aria-hidden="true">↓</span>
+          </a>
         </div>
       </div>
       <canvas className="ab-cta__seq" aria-hidden="true" />

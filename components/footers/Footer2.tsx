@@ -8,6 +8,7 @@ import {
   CommonScrollAnimatedLink,
 } from "@/components/animations/CommonScrollAnimated";
 import TextScramble from "@/components/animations/TextScramble";
+import { RESUME_FILE, RESUME_URL } from "@/lib/resume";
 export default function Footer2({ name = "VEDANK" }: { name?: string }) {
   return (
     <BlurSection as="footer" className="mxd-footer">
@@ -397,6 +398,61 @@ export default function Footer2({ name = "VEDANK" }: { name?: string }) {
                                   animation="slideDownLine"
                                 >
                                   <span>Email</span>
+                                </CommonScrollAnimated>
+                              </div>
+                              <CommonScrollAnimated
+                                className="socials-list__arrow anim-uni-slide-down"
+                                as="div"
+                                animation="slideDownLine"
+                              >
+                                <i>
+                                  <svg
+                                    version="1.1"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    xmlnsXlink="http://www.w3.org/1999/xlink"
+                                    x="0px"
+                                    y="0px"
+                                    viewBox="0 0 18 18"
+                                    enableBackground="new 0 0 18 18"
+                                    xmlSpace="preserve"
+                                  >
+                                    <path
+                                      d="M18,0v14.4h-3.6V7.2h-3.6V3.6H3.6V0H18z M7.2,10.8h3.6V7.2H7.2C7.2,7.2,7.2,10.8,7.2,10.8z M3.6,14.4h3.6v-3.6H3.6V14.4z
+                                M0,18h3.6v-3.6H0V18z"
+                                    />
+                                  </svg>
+                                </i>
+                              </CommonScrollAnimated>
+                              <CommonScrollAnimated
+                                className="socials-list__divider divider-bottom anim-uni-clip-in"
+                                as="div"
+                                animation="clipIn"
+                              />
+                            </a>
+                            <a
+                              className="socials-list__item slide-right-up"
+                              href={RESUME_URL}
+                              download={RESUME_FILE}
+                            >
+                              <CommonScrollAnimated
+                                className="socials-list__divider divider-top anim-uni-clip-in"
+                                as="div"
+                                animation="clipIn"
+                              />
+                              <div className="socials-list__info">
+                                <CommonScrollAnimated
+                                  className="socials-list__number anim-uni-slide-down"
+                                  as="div"
+                                  animation="slideDownLine"
+                                >
+                                  <span>[05]</span>
+                                </CommonScrollAnimated>
+                                <CommonScrollAnimated
+                                  className="socials-list__name anim-uni-slide-down"
+                                  as="div"
+                                  animation="slideDownLine"
+                                >
+                                  <span>Resume</span>
                                 </CommonScrollAnimated>
                               </div>
                               <CommonScrollAnimated
