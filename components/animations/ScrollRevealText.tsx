@@ -77,7 +77,7 @@ export default function ScrollRevealText({
 
   return (
     <Component
-      ref={elRef as any}
+      ref={elRef as never}
       className={combinedClassName}
       style={customStyle}
       data-text={text}

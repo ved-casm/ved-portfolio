@@ -694,7 +694,7 @@ export default function RevealHero({
       gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
       gl.enableVertexAttribArray(0);
 
-      return (targetFBO: any | null, clear = false) => {
+      return (targetFBO: { fbo: WebGLFramebuffer; width: number; height: number } | null, clear = false) => {
         if (!gl) return;
         if (targetFBO == null) {
           gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
@@ -1084,7 +1084,7 @@ export default function RevealHero({
 
     function correctRadius(radius: number) {
       if (!canvas) return radius;
-      let aspectRatio = canvas.width / canvas.height;
+      const aspectRatio = canvas.width / canvas.height;
       if (aspectRatio > 1) radius *= aspectRatio;
       return radius;
     }
@@ -1320,14 +1320,14 @@ export default function RevealHero({
 
     function correctDeltaX(delta: number) {
       if (!canvas) return delta;
-      let aspectRatio = canvas.width / canvas.height;
+      const aspectRatio = canvas.width / canvas.height;
       if (aspectRatio < 1) delta *= aspectRatio;
       return delta;
     }
 
     function correctDeltaY(delta: number) {
       if (!canvas) return delta;
-      let aspectRatio = canvas.width / canvas.height;
+      const aspectRatio = canvas.width / canvas.height;
       if (aspectRatio > 1) delta /= aspectRatio;
       return delta;
     } const onPointerMove = (e: MouseEvent) => {

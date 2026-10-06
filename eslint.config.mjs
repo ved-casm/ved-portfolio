@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // static assets: vendored, minified scripts (Draco decoder, template JS)
+    "public/**",
   ]),
 ]);
 
