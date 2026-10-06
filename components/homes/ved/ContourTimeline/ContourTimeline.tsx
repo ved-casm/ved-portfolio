@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect, useState, useMemo, useCallback, memo } from "react";
+import { useRef, useEffect, useState, useMemo, useCallback, memo, useSyncExternalStore } from "react";
 import Image from "next/image";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -208,6 +208,8 @@ const YearsGrid = memo(function YearsGrid({
   );
 });
 
+const noopSubscribe = () => () => {};
+
 export default function ContourTimeline({
   milestones = DEFAULT_CONTOUR_MILESTONES,
   vhPerMilestone = 100,
@@ -215,11 +217,12 @@ export default function ContourTimeline({
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const pinRef = useRef<HTMLDivElement | null>(null);
   const [progress, setProgress] = useState(0); // 0 (2018) to 1 (2026)
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+  // false on the server and during hydration, true once on the client
+  const isClient = useSyncExternalStore(
+    noopSubscribe,
+    () => true,
+    () => false,
+  );
 
   // Compute active milestone index from progress
   const activeIndex = useMemo(() => {
