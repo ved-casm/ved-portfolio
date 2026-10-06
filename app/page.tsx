@@ -35,6 +35,7 @@ const personJsonLd = {
       "@id": `${SITE_URL}/#website`,
       url: SITE_URL,
       name: SITE_NAME,
+      alternateName: ["Vedank Gaur Portfolio", "VED"],
       publisher: { "@id": `${SITE_URL}/#person` },
     },
   ],
