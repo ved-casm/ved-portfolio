@@ -84,7 +84,7 @@ export default function HomePage() {
           compact
           blurOverlay={false}
         >
-          I Don't Handoff &nbsp;
+          I Don&apos;t Handoff &nbsp;
           <span>Designs. <br /></span>I Ship Them.
         </DividerStickyCaption>
         </div>
