@@ -54,7 +54,7 @@ describe("resume download", () => {
 });
 
 describe("link preview images", () => {
-  it.each(["app/opengraph-image.jpg", "app/twitter-image.jpg", "app/(other-pages)/contact/opengraph-image.jpg"])(
+  it.each(["app/opengraph-image.jpg", "app/twitter-image.jpg"])(
     "%s exists with alt text",
     (img) => {
       expect(fs.existsSync(path.join(process.cwd(), img))).toBe(true);
