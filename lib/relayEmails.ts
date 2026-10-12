@@ -15,6 +15,7 @@ export type RelayMessage = {
 };
 
 export const BOOKING = "https://cal.com/vedankgaur/quick";
+const ASSETS = "https://ved-portfolio-nine.vercel.app/email";
 
 export const SITES: Record<RelaySite, { label: string; url: string }> = {
   product: { label: "product design portfolio", url: "https://product-designer-five.vercel.app" },
@@ -80,23 +81,40 @@ const THEMES: Record<RelaySite, Theme> = {
   },
 };
 
-function shell(site: RelaySite, preheader: string, inner: string) {
+function tapeRow() {
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="left" style="padding:0 0 4px;line-height:0;"><img src="${ASSETS}/tape-a.png" width="100" height="28" alt="" style="display:block;border:0;margin:-6px 0 0 -14px;"></td><td align="right" style="padding:0 0 4px;line-height:0;"><img src="${ASSETS}/tape-b.png" width="100" height="28" alt="" style="display:block;border:0;margin:-6px -14px 0 0;"></td></tr></table>`;
+}
+
+function beam(width = 512) {
+  return `<img src="${ASSETS}/product-beam.png" width="${width}" alt="" style="display:block;width:100%;max-width:none;height:auto;border:0;">`;
+}
+
+function shell(site: RelaySite, preheader: string, inner: string, fancy = false) {
   const t = THEMES[site];
+  const dots = fancy && site === "showdown" ? `background-image:url(${ASSETS}/dots.png);` : "";
+  const top = fancy ? (site === "showdown" ? tapeRow() : `<div style="height:20px;line-height:20px;font-size:0;">&nbsp;</div>`) : "";
+  const pad = fancy ? "0 24px 22px" : "32px 32px 28px";
   return `<!doctype html><html><body style="margin:0;padding:0;background:${t.bg};">
 <span style="display:none;max-height:0;overflow:hidden;opacity:0;">${esc(preheader)}</span>
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${t.bg};padding:32px 12px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${t.bg};${dots}padding:${fancy ? "24px 10px" : "32px 12px"};">
 <tr><td align="center">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:${t.card};border:${t.border};border-radius:${t.radius};box-shadow:${t.shadow};">
-<tr><td style="padding:32px 32px 28px;font-family:${t.body};color:${t.ink};font-size:16px;line-height:1.6;">${inner}</td></tr>
+<tr><td style="padding:${pad};font-family:${t.body};color:${t.ink};font-size:16px;line-height:1.6;">${top}${inner}</td></tr>
 </table>
 </td></tr></table></body></html>`;
 }
 
-function detailsBlock(site: RelaySite, m: RelayMessage) {
+function detailsBlock(site: RelaySite, m: RelayMessage, fancy = false) {
   const t = THEMES[site];
   const row = (k: string, v: string) =>
-    `<tr><td style="padding:10px 0;border-top:1px solid ${t.line};font-family:${t.mono};font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:${t.muted};width:96px;vertical-align:top;">${k}</td><td style="padding:10px 0;border-top:1px solid ${t.line};font-size:15px;color:${t.ink};">${v}</td></tr>`;
-  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:20px 0 8px;">${row("name", esc(m.name))}${row("email", esc(m.email))}${row("message", nl2br(m.message))}</table>`;
+    `<tr><td style="padding:${fancy ? "8px" : "10px"} 0;border-top:1px solid ${t.line};font-family:${t.mono};font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:${t.muted};width:96px;vertical-align:top;">${k}</td><td style="padding:${fancy ? "8px" : "10px"} 0;border-top:1px solid ${t.line};font-size:15px;color:${t.ink};">${v}</td></tr>`;
+  if (fancy && site === "showdown") {
+    // scrapbook: details as a yellow sticky note with a dashed pen-line
+    const line = (k: string, v: string) =>
+      `<tr><td style="padding:3px 0;font-family:${t.mono};font-size:12px;color:${t.accent};width:70px;vertical-align:top;">${k}</td><td style="padding:3px 0;font-family:${t.mono};font-size:14px;color:${t.ink};">${v}</td></tr>`;
+    return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:14px 0 6px;background:#FFE88A;border:1.5px solid #161616;border-radius:3px;box-shadow:4px 4px 0 rgba(22,22,22,.2);"><tr><td style="padding:14px 16px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0">${line("name", esc(m.name))}${line("email", esc(m.email))}<tr><td colspan="2" style="padding:8px 0 6px;"><div style="border-top:1.5px dashed #161616;line-height:0;font-size:0;">&nbsp;</div></td></tr>${line("note", nl2br(m.message))}</table></td></tr></table>`;
+  }
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:${fancy ? "14px 0 6px" : "20px 0 8px"};">${row("name", esc(m.name))}${row("email", esc(m.email))}${row("message", nl2br(m.message))}</table>`;
 }
 
 export function ownerEmail(m: RelayMessage) {
@@ -118,22 +136,29 @@ ${detailsBlock(m.site, m)}
 export function thankYouEmail(m: RelayMessage) {
   const t = THEMES[m.site];
   const site = SITES[m.site];
+  const product = m.site === "product";
   const subject = `Thanks ${firstName(m.name)} - got your message`;
   const text = `Hi ${firstName(m.name)},\n\nThanks for reaching out. I got your message and will reply within 24 hours.\n\nHere is what you sent:\n\nName: ${m.name}\nEmail: ${m.email}\n\n${m.message}\n\nWant to talk sooner? Book a call: ${BOOKING}\n\n- Vedank Gaur\n${site.url}`;
-  const hl =
-    m.site === "showdown"
-      ? `<span style="background:#FFE45C;padding:0 6px;">${esc(firstName(m.name))}</span>`
-      : `<em style="color:${t.accent};">${esc(firstName(m.name))}</em>`;
+  const hl = product
+    ? `<em style="color:${t.accent};">${esc(firstName(m.name))}</em>`
+    : `<span style="background:#FFE45C;padding:0 6px;">${esc(firstName(m.name))}</span>`;
+  const btn = product
+    ? `<a href="${BOOKING}" style="display:inline-block;padding:12px 22px;background:${t.btnBg};color:${t.btnInk};font-family:${t.mono};font-size:14px;font-weight:500;text-decoration:none;border-radius:999px;">Book a call &rarr;</a>`
+    : `<a href="${BOOKING}" style="display:inline-block;padding:12px 22px;background:${t.btnBg};color:${t.btnInk};font-family:${t.mono};font-size:14px;font-weight:500;text-decoration:none;border-radius:4px;border:2px solid #161616;box-shadow:4px 4px 0 ${t.accent};">Book a call &rarr;</a>`;
+  const sign = product
+    ? `<div style="margin:18px -24px 0;line-height:0;">${beam()}</div><p style="margin:6px 0 0;font-size:14px;color:${t.muted};">- Vedank Gaur &nbsp;/&nbsp; <a href="${site.url}" style="color:${t.muted};">${site.url.replace("https://", "")}</a></p>`
+    : `<div style="margin:20px 0 0;border-top:1.5px dashed #161616;line-height:0;font-size:0;">&nbsp;</div><p style="margin:10px 0 0;font-family:${t.mono};font-size:13px;color:${t.muted};">- Vedank Gaur &nbsp;&#10033;&nbsp; <a href="${site.url}" style="color:${t.muted};">${site.url.replace("https://", "")}</a></p>`;
   const html = shell(
     m.site,
     "Thanks for reaching out - I reply within 24 hours.",
-    `<p style="margin:0 0 6px;font-family:${t.mono};font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:${t.accent};">message received</p>
-<h1 style="margin:0 0 14px;font-family:${t.heading};font-size:32px;line-height:1.12;font-weight:${m.site === "showdown" ? 900 : 500};letter-spacing:-.03em;">Thanks, ${hl}.</h1>
-<p style="margin:0 0 6px;">I got your message and will reply within 24 hours. Here is a copy of what you sent:</p>
-${detailsBlock(m.site, m)}
-<p style="margin:24px 0 14px;">Want to talk sooner? Grab a slot on my calendar.</p>
-<a href="${BOOKING}" style="display:inline-block;padding:13px 22px;background:${t.btnBg};color:${t.btnInk};font-family:${t.mono};font-size:14px;font-weight:500;text-decoration:none;border-radius:${m.site === "showdown" ? "4px" : "999px"};${m.site === "showdown" ? `border:2px solid #161616;box-shadow:4px 4px 0 ${t.accent};` : ""}">Book a call &rarr;</a>
-<p style="margin:28px 0 0;font-size:14px;color:${t.muted};">- Vedank Gaur<br><a href="${site.url}" style="color:${t.muted};">${site.url.replace("https://", "")}</a></p>`,
+    `${product ? `<div style="margin:0 -24px 14px;line-height:0;">${beam()}</div>` : ""}<p style="margin:0 0 4px;font-family:${t.mono};font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:${t.accent};">${product ? "message received" : "( message received )"}</p>
+<h1 style="margin:0 0 10px;font-family:${t.heading};font-size:30px;line-height:1.1;font-weight:${product ? 500 : 900};letter-spacing:-.03em;">Thanks, ${hl}.</h1>
+<p style="margin:0 0 4px;">I got your message and will reply within 24 hours. Here is a copy of what you sent:</p>
+${detailsBlock(m.site, m, true)}
+<p style="margin:16px 0 12px;">Want to talk sooner? Grab a slot on my calendar.</p>
+${btn}
+${sign}`,
+    true,
   );
   return { subject, text, html };
 }
